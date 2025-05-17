@@ -1,11 +1,13 @@
 [phases.setup]
-nixPkgs = ["python311", "gcc", "libmysqlclient"]
+nixPkgs = ["python39", "gcc", "libmysqlclient"]
+providers = ["python"]
 
 [phases.install]
-cmds = ["python -m pip install --upgrade pip", "pip install -r requirements.txt"]
+cmds = ["pip install --upgrade pip setuptools wheel", "pip install -r requirements.txt"]
 
 [phases.build]
-cmds = ["python manage.py collectstatic --noinput"]
+cmds = ["cd Book && python manage.py collectstatic --noinput"]
 
 [start]
-cmd = "gunicorn Book.wsgi --log-file -"
+cmd = "cd Book && gunicorn BookNova.wsgi --log-file -"
+watchPatterns = ["Book/**/*.py"]
