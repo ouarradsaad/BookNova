@@ -1,13 +1,7 @@
-[phases.setup]
-nixPkgs = ["python39", "gcc", "libmysqlclient"]
-providers = ["python"]
+[build]
+builder = "heroku-buildpack-python"
 
-[phases.install]
-cmds = ["pip install --upgrade pip setuptools wheel", "pip install -r requirements.txt"]
-
-[phases.build]
-cmds = ["cd Book && python manage.py collectstatic --noinput"]
-
-[start]
-cmd = "cd Book && gunicorn BookNova.wsgi --log-file -"
-watchPatterns = ["Book/**/*.py"]
+[deploy]
+startCommand = "cd Book && gunicorn BookNova.wsgi --log-file -"
+buildCommand = "pip install -r requirements.txt && cd Book && python manage.py collectstatic --noinput"
+releasesEnabled = true
