@@ -1,0 +1,416 @@
+{% extends "library/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+body {
+    margin:0;
+    min-height: 100vh;
+    color: #333;
+    font-family: 'Montserrat', Arial, sans-serif;
+    background: #f8f4ef;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+.main-content-wrapper {
+    background: #fffefb;
+    max-width: 1200px;
+    margin: 2.5rem auto 0 auto;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 32px #d2b48c33, 0 1.5px 8px #bfa76a22;
+    padding: 2.5rem 2.2rem 2.2rem 2.2rem;
+}
+.catalogue-section {
+    background: #fdf6ed;
+    border-radius: 1.2rem;
+    box-shadow: 0 2px 12px #ffe2b733;
+    padding: 1.5rem 1.2rem;
+    margin-bottom: 2.2rem;
+}
+.card {
+    background: #fffbe9;
+    border-radius: 1.8rem;
+    box-shadow: 0 6px 32px 0 rgba(44,62,80,0.13), 0 1.5px 8px 0 #bfa76a33;
+    border: 1.5px solid #e9e2d0;
+    transition: transform 0.28s cubic-bezier(.4,2,.6,1.2), box-shadow 0.28s, border 0.24s;
+    font-family: 'Montserrat', Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2.2rem;
+}
+.card:hover {
+    transform: scale(1.04) translateY(-6px) rotate(-1deg);
+    box-shadow: 0 12px 40px 0 #bfa76a55, 0 2px 20px 0 #2c3e5022;
+    border: 2.5px solid #bfa76a;
+    background: linear-gradient(120deg, #fffbe9 60%, #d2b48c22 100%);
+}
+.catalogue-search-bar {
+    max-width: 370px;
+    margin: 0 auto 2rem auto;
+}
+.catalogue-search-bar .input-group {
+    box-shadow: 0 2px 10px #bfa76a22;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    background: #fff;
+    height: 44px;
+}
+.catalogue-search-bar .input-group-text {
+    background: #fffbe9;
+    border: none;
+    font-size: 1.08rem;
+    color: #bfa76a;
+    padding-right: 0.5rem;
+    height: 44px;
+    display: flex;
+    align-items: center;
+}
+.catalogue-search-bar .search-input {
+    border: none;
+    border-radius: 0;
+    font-size: 1rem;
+    font-family: 'Montserrat', Arial, sans-serif;
+    padding-left: 0.1rem;
+    background: #fff;
+    color: #2c3e50;
+    box-shadow: none;
+    height: 44px;
+}
+.catalogue-search-bar .search-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #bfa76a33;
+}
+.btn-gold-gradient {
+    background: linear-gradient(90deg, #bfa76a 0%, #d2b48c 100%);
+    color: #fff;
+    border: none;
+    border-radius: 0 1.5rem 1.5rem 0;
+    font-weight: 700;
+    font-family: 'Montserrat', Arial, sans-serif;
+    letter-spacing: 1px;
+    padding: 0.3rem 1.1rem;
+    font-size: 1rem;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+    box-shadow: 0 2px 10px #bfa76a22;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+.btn-gold-gradient:hover {
+    background: linear-gradient(90deg, #d2b48c 0%, #bfa76a 100%);
+    color: #2c3e50;
+    transform: scale(1.04);
+    box-shadow: 0 4px 18px #bfa76a44;
+}
+.card-img-top {
+    height: 250px;
+    object-fit: cover;
+}
+.price-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #8B5E3C 0%, #d2b48c 100%);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 2;
+    transform: rotate(5deg);
+    border: 2px solid white;
+}
+.book-status {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 2;
+}
+.status-available {
+    background-color: #28a745;
+    color: white;
+}
+.status-low {
+    background-color: #ffc107;
+    color: #212529;
+}
+.status-unavailable {
+    background-color: #dc3545;
+    color: white;
+}
+.book-category {
+    display: inline-block;
+    background-color: #f0e6da;
+    color: #8B5E3C;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+.card-title {
+    font-weight: 700;
+    color: #8B5E3C;
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+    font-family: 'Playfair Display', serif;
+}
+.card-author {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+.card-body {
+    padding: 1.5rem;
+}
+.book-details {
+    margin-bottom: 15px;
+}
+.book-details p {
+    margin-bottom: 8px;
+}
+.comments-section {
+    background-color: #f9f5f0;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 15px;
+}
+.comment-item {
+    border-bottom: 1px solid #e9e2d0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.comment-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+.comment-author {
+    font-weight: 600;
+    color: #8B5E3C;
+}
+.comment-date {
+    font-size: 0.8rem;
+    color: #999;
+}
+.comment-text {
+    margin-top: 5px;
+}
+.filter-section {
+    background-color: #f9f5f0;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+.filter-title {
+    font-weight: 600;
+    color: #8B5E3C;
+    margin-bottom: 10px;
+}
+</style>
+<div class="main-content-wrapper">
+    {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} text-center" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <h2 class="mb-5 text-center" style="
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    font-weight: 900;
+    color: #8B5E3C;
+    text-shadow: 0 4px 24px rgba(44,62,80,0.14), 0 2px 8px #D2B48C;
+    letter-spacing: 1px;
+    margin-bottom: 2.5rem;">Plongez dans l'univers des livres&nbsp;: trouvez, explorez, partagez vos découvertes&nbsp;!</h2>
+    
+    <div class="filter-section mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <form method="get" class="catalogue-search-bar" style="max-width:370px;">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 pe-0" style="border-radius: 2rem 0 0 2rem;">
+                            <i class="fas fa-search text-gold"></i>
+                        </span>
+                        <input type="text" class="form-control shadow-none search-input" name="q" placeholder="  Rechercher un livre" value="{{ query|default:'' }}">
+                        <button class="btn btn-gold-gradient" type="submit">Rechercher</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="filter-title d-inline-block me-2">Filtrer par :</div>
+                <div class="btn-group">
+                    <a href="?sort=title" class="btn btn-outline-secondary btn-sm">Titre</a>
+                    <a href="?sort=author" class="btn btn-outline-secondary btn-sm">Auteur</a>
+                    <a href="?sort=price_asc" class="btn btn-outline-secondary btn-sm">Prix ↑</a>
+                    <a href="?sort=price_desc" class="btn btn-outline-secondary btn-sm">Prix ↓</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    <div class="row g-4">
+        {% for livre in livres %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <!-- Badge de prix -->
+                <div class="price-badge">
+                    {{ livre.prix|default:"0.00" }} DH
+                </div>
+                
+                <!-- Badge de disponibilité -->
+                {% if livre.nombre_exemplaires > 5 %}
+                    <div class="book-status status-available">
+                        <i class="fas fa-check-circle"></i> Disponible
+                    </div>
+                {% elif livre.nombre_exemplaires > 0 %}
+                    <div class="book-status status-low">
+                        <i class="fas fa-exclamation-circle"></i> {{ livre.nombre_exemplaires }} exemplaire(s)
+                    </div>
+                {% else %}
+                    <div class="book-status status-unavailable">
+                        <i class="fas fa-times-circle"></i> Indisponible
+                    </div>
+                {% endif %}
+                
+                {% if livre.couverture %}
+                <img src="{{ livre.couverture.url }}" class="card-img-top" alt="Couverture du livre">
+                {% else %}
+                <img src="{% static 'library/images/roman.jpg' %}" class="card-img-top" alt="Livre">
+                {% endif %}
+                
+                <div class="card-body">
+                    <!-- Catégorie -->
+                    <div class="book-category">
+                        <i class="fas fa-bookmark me-1"></i> {{ livre.categorie_livre|default:"Non catégorisé" }}
+                    </div>
+                    
+                    <h5 class="card-title">{{ livre.titre_livre }}</h5>
+                    <p class="card-author">par {{ livre.auteur_livre }}</p>
+                    
+                    <div class="book-details">
+                        <p><i class="fas fa-barcode me-2"></i><strong>ISBN :</strong> {{ livre.isbn }}</p>
+                        <p><i class="fas fa-book-open me-2"></i><strong>Description :</strong> {{ livre.description|default:'Aucune description disponible.' }}</p>
+                    </div>
+                    
+                    {% if role == 'lecteur' %}
+                    <div class="d-flex gap-2 mb-3">
+                        {% if livre.nombre_exemplaires > 0 %}
+                        <!-- Si le livre est disponible, affichez uniquement le bouton Emprunter -->
+                        <a href="{% url 'paiement' livre.livre_id %}" class="btn btn-gold-gradient w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>Emprunter ({{ livre.prix|default:"0.00" }} DH)
+                        </a>
+                        {% else %}
+                        <!-- Si le livre est indisponible, affichez le bouton Indisponible (désactivé) et le bouton Réserver (actif) -->
+                        <button class="btn btn-secondary" disabled>
+                            <i class="fas fa-shopping-cart me-2"></i>Indisponible
+                        </button>
+                        <a href="{% url 'reserver_livre' livre.livre_id %}" class="btn btn-warning flex-fill"><i class="fas fa-calendar-plus me-1"></i> Réserver</a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    <div class="book-details-section">
+                        <div class="card-section">
+                            <h6 class="section-title"><i class="fas fa-lightbulb me-2"></i>Recommandations</h6>
+                            <p class="recommendation-text">
+                                {% if livre.recommandation_age %}
+                                <span class="badge bg-info"><i class="fas fa-child me-1"></i> Âge recommandé : {{ livre.recommandation_age }}</span>
+                                {% endif %}
+                                <span class="badge bg-success"><i class="fas fa-clock me-1"></i> Temps de lecture estimé : {% if livre.nombre_pages %}{{ livre.nombre_pages|divisibleby:30|yesno:"0,1" }}{% else %}7{% endif %} heures</span>
+                                <span class="badge bg-primary"><i class="fas fa-users me-1"></i> Perfect pour les amateurs de {{ livre.categorie_livre|default:"littérature" }}</span>
+                            </p>
+                            <p class="mt-2 small text-muted">
+                                <i class="fas fa-compass me-1"></i> Vous aimez ce livre ? Explorez notre collection complète de {{ livre.categorie_livre|default:"livres" }} pour découvrir des titres similaires !
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <style>
+                        .book-details-section {
+                            font-family: 'Montserrat', Arial, sans-serif;
+                        }
+                        .card-section {
+                            padding: 15px;
+                            background-color: #f9f5f0;
+                            border-radius: 12px;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                        }
+                        .section-title {
+                            font-weight: 600;
+                            color: #8B5E3C;
+                            margin-bottom: 12px;
+                            border-bottom: 1px solid #e9e2d0;
+                            padding-bottom: 8px;
+                        }
+                        .details-grid {
+                            display: grid;
+                            grid-template-columns: repeat(2, 1fr);
+                            gap: 10px;
+                        }
+                        .detail-item {
+                            display: flex;
+                            flex-direction: column;
+                        }
+                        .detail-label {
+                            font-size: 0.8rem;
+                            color: #666;
+                            margin-bottom: 2px;
+                        }
+                        .detail-value {
+                            font-weight: 600;
+                            color: #333;
+                        }
+                        .rating-container {
+                            display: flex;
+                            align-items: center;
+                        }
+                        .stars-container {
+                            position: relative;
+                            display: inline-block;
+                            margin-right: 10px;
+                        }
+                        .stars {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            color: #ffc107;
+                        }
+                        .stars-bg {
+                            white-space: nowrap;
+                            color: #e9e2d0;
+                        }
+                        .rating-text {
+                            font-weight: 600;
+                            color: #333;
+                        }
+                        .popularity-text {
+                            font-size: 0.9rem;
+                            margin-top: 5px;
+                            display: block;
+                        }
+                        .recommendation-text {
+                            margin-bottom: 0;
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 5px;
+                        }
+                    </style>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

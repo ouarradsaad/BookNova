@@ -1,0 +1,34 @@
+{% extends 'library/Dashboard.html' %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Ajouter un livre</h2>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {% for field in form %}
+        <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="form-text text-muted">{{ field.help_text }}</div>
+            {% endif %}
+            {% if field.errors %}
+            <div class="invalid-feedback d-block">
+                {% for error in field.errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary ms-2">Annuler</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,273 @@
+{% extends 'library/Dashboard.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        background-color: #f8f4ef !important;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+    .page-header {
+        background: linear-gradient(120deg, #8B5E3C, #D2B48C);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(139, 94, 60, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    .page-header::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff" opacity="0.05"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>') no-repeat right -40px top -40px;
+        background-size: 180px 180px;
+        opacity: 0.15;
+        mix-blend-mode: overlay;
+    }
+    .filter-bar {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+    .search-input {
+        border: 2px solid #e6d5c3;
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        transition: all 0.3s ease;
+    }
+    .search-input:focus {
+        border-color: #8B5E3C;
+        box-shadow: 0 0 0 0.25rem rgba(139, 94, 60, 0.25);
+    }
+    .custom-table {
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 8px 40px rgba(44, 62, 80, 0.10), 0 4px 24px rgba(210, 180, 140, 0.2);
+        background-color: white;
+    }
+    .custom-table thead {
+        background-color: #8B5E3C;
+        color: #fff;
+        font-size: 1.15rem;
+        letter-spacing: 1.5px;
+        border-top-left-radius: 22px;
+        border-top-right-radius: 22px;
+    }
+    .custom-table th, .custom-table td {
+        vertical-align: middle !important;
+        padding: 1.15rem 1.1rem;
+        border: none;
+        font-size: 1.08rem;
+    }
+    .custom-table tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .custom-table tbody tr:last-child {
+        border-bottom: none;
+    }
+    .custom-table tbody tr:hover {
+        background-color: #fffbf4;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(139, 94, 60, 0.05);
+    }
+    .action-btn {
+        border-radius: 8px;
+        font-size: 0.85rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .confirm-btn {
+        background-color: #198754;
+        color: white;
+    }
+    .cancel-btn {
+        background-color: #dc3545;
+        color: white;
+    }
+    .avatar-circle {
+        width: 36px !important;
+        height: 36px !important;
+        background-color: #8B5E3C;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: bold;
+    }
+    @media (max-width: 768px) {
+        .custom-table th, .custom-table td {
+            font-size: 0.95rem;
+            padding: 0.5rem 0.4rem;
+        }
+    }
+</style>
+
+<div class="container py-5">
+    <!-- Titre -->
+    <div class="filter-bar">
+        <h3 class="mb-0"><i class="fas fa-bookmark me-2"></i>Gestion des réservations</h3>
+    </div>
+    
+    <!-- Messages d'alerte -->
+    {% if messages %}
+    <div class="alerts-container mb-4">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Tableau des réservations -->
+    <div class="table-responsive">
+        <table class="custom-table table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th style="width: 5%">#</th>
+                    <th style="width: 30%">Livre</th>
+                    <th style="width: 25%">Lecteur</th>
+                    <th style="width: 20%">Date de réservation</th>
+                    <th style="width: 20%">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if reservations %}
+                    {% for reservation in reservations %}
+                    <tr>
+                        <td>{{ reservation.reservation_id }}</td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="book-title">{{ reservation.livre.titre_livre }}</span>
+                                <small class="text-muted">{{ reservation.livre.auteur_livre }}</small>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle me-2">
+                                    {{ reservation.lecteur.prenom|first }}{{ reservation.lecteur.nom|first }}
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <span>{{ reservation.lecteur.nom }} {{ reservation.lecteur.prenom }}</span>
+                                    <small class="text-muted">{{ reservation.lecteur.email }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ reservation.date_reservation|date:"d/m/Y" }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'confirmer_reservation' reservation.reservation_id %}" class="btn btn-sm action-btn confirm-btn">
+                                    <i class="fas fa-check me-1"></i>Confirmer
+                                </a>
+                                <a href="{% url 'annuler_reservation' reservation.reservation_id %}" class="btn btn-sm action-btn cancel-btn">
+                                    <i class="fas fa-times me-1"></i>Annuler
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="fas fa-bookmark fa-3x mb-3 text-muted"></i>
+                                <h5 class="text-muted">Aucune réservation trouvée</h5>
+                                <p class="text-muted">Les lecteurs n'ont pas encore fait de réservations</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    {% if reservations.has_other_pages %}
+    <div class="mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if reservations.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ reservations.previous_page_number }}&q={{ request.GET.q|default:'' }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                
+                {% for i in reservations.paginator.page_range %}
+                    {% if reservations.number == i %}
+                        <li class="page-item active">
+                            <a class="page-link" href="#">{{ i }}</a>
+                        </li>
+                    {% elif i > reservations.number|add:"-3" and i < reservations.number|add:"3" %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}&q={{ request.GET.q|default:'' }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if reservations.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ reservations.next_page_number }}&q={{ request.GET.q|default:'' }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Afficher un message de confirmation après une action
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message');
+        if (message) {
+            const alertContainer = document.createElement('div');
+            alertContainer.className = 'alert alert-success alert-dismissible fade show';
+            alertContainer.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            document.querySelector('.container').insertBefore(
+                alertContainer, 
+                document.querySelector('.filter-bar')
+            );
+            
+            // Masquer automatiquement l'alerte après 5 secondes
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alertContainer);
+                bsAlert.close();
+            }, 5000);
+        }
+    });
+</script>
+{% endblock %}

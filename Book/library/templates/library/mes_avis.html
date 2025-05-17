@@ -1,0 +1,164 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header bg-gradient text-white p-4" style="background-color: #8B5E3C;">
+                    <h2 class="text-center mb-0" style="font-family: 'Playfair Display', serif; color: white; font-weight: bold;">Mes Avis</h2>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Formulaire pour ajouter un avis -->
+                    <div class="mb-5">
+                        <h4 class="mb-4">Ajouter un nouvel avis</h4>
+                        <form method="post" action="{% url 'ajouter_avis' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="livre" class="form-label">Livre</label>
+                                <select class="form-select" id="livre" name="livre_id" required>
+                                    <option value="">Sélectionnez un livre</option>
+                                    {% for livre in livres_empruntes %}
+                                        <option value="{{ livre.livre_id }}">{{ livre.titre_livre }} - {{ livre.auteur_livre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="note" class="form-label">Note</label>
+                                <div class="star-rating">
+                                    <div class="rating-group">
+                                        <input disabled checked class="rating__input rating__input--none" name="note" id="rating-none" value="0" type="radio">
+                                        {% for i in '12345' %}
+                                            <label aria-label="{{ i }} star" class="rating__label" for="rating-{{ i }}">
+                                                <i class="rating__icon rating__icon--star fa fa-star"></i>
+                                            </label>
+                                            <input class="rating__input" name="note" id="rating-{{ i }}" value="{{ i }}" type="radio">
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="commentaire" class="form-label">Commentaire</label>
+                                <textarea class="form-control" id="commentaire" name="commentaire" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Publier mon avis</button>
+                        </form>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Liste des avis -->
+                    <h4 class="mb-4">Mes avis publiés</h4>
+                    {% if avis %}
+                        <div class="row g-4">
+                            {% for av in avis %}
+                                <div class="col-lg-6">
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center mb-3">
+                                                {% if av.livre.couverture %}
+                                                    <img src="{{ av.livre.couverture.url }}" alt="{{ av.livre.titre_livre }}" class="me-3" style="width: 60px; height: 80px; object-fit: cover;">
+                                                {% else %}
+                                                    <div class="me-3 bg-light text-center" style="width: 60px; height: 80px; line-height: 80px;">📚</div>
+                                                {% endif %}
+                                                <div>
+                                                    <h5 class="mb-0">{{ av.livre.titre_livre }}</h5>
+                                                    <p class="text-muted small mb-0">{{ av.livre.auteur_livre }}</p>
+                                                    <div class="text-warning mt-1">
+                                                        {% for i in '12345' %}
+                                                            {% if forloop.counter <= av.note %}
+                                                                <i class="fas fa-star"></i>
+                                                            {% else %}
+                                                                <i class="far fa-star"></i>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <span class="ms-1 text-muted">{{ av.date_creation|date:"d/m/Y" }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="card-text">{{ av.commentaire }}</p>
+                                            <div class="d-flex justify-content-end">
+                                                {% if av.id %}
+                                                    <a href="{% url 'modifier_avis' av.id %}" class="btn btn-sm btn-outline-primary me-2">
+                                                        <i class="fas fa-edit"></i> Modifier
+                                                    </a>
+                                                    <a href="{% url 'supprimer_avis' av.id %}" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-trash"></i> Supprimer
+                                                    </a>
+                                                {% else %}
+                                                    <span class="text-muted">Actions non disponibles</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="fas fa-comment-alt" style="font-size: 3rem; color: #8B5E3C;"></i>
+                            </div>
+                            <p class="lead text-muted mb-4">Vous n'avez pas encore publié d'avis.</p>
+                            <p class="text-muted">Empruntez des livres et partagez votre opinion avec la communauté!</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Style CSS pour le système d'évaluation par étoiles -->
+<style>
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        font-size: 1.5rem;
+        justify-content: flex-end;
+        padding: 0 0.2em;
+        text-align: center;
+        width: 5em;
+    }
+
+    .rating-group {
+        display: inline-flex;
+    }
+
+    .rating__input {
+        position: absolute !important;
+        left: -9999px !important;
+    }
+
+    .rating__label {
+        cursor: pointer;
+        padding: 0 0.1em;
+        font-size: 2rem;
+    }
+
+    .rating__icon--star {
+        color: #ddd;
+    }
+
+    .rating__input:checked ~ .rating__label .rating__icon--star {
+        color: #FFD700;
+    }
+
+    .rating__input:hover ~ .rating__label .rating__icon--star {
+        color: #FFD700;
+    }
+
+    /* Animation */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .rating__label:hover .rating__icon--star,
+    .rating__label:hover ~ .rating__label .rating__icon--star {
+        animation: pulse 1s;
+    }
+</style>
+{% endblock %}

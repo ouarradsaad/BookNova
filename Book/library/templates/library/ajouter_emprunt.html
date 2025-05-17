@@ -1,0 +1,42 @@
+{% extends 'library/Dashboard.html' %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Nouvel emprunt</h2>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="lecteur" class="form-label">Lecteur</label>
+            <select class="form-control" id="lecteur" name="lecteur" required>
+                <option value="">Sélectionner un lecteur</option>
+                {% for lecteur in lecteurs %}
+                    <option value="{{ lecteur.lecteur_id }}" {% if lecteur_id|default:'' == lecteur.lecteur_id|stringformat:'s' %}selected{% endif %}>{{ lecteur.nom }} {{ lecteur.prenom }} ({{ lecteur.email }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="livre" class="form-label">Livre</label>
+            <select class="form-control" id="livre" name="livre" required>
+                <option value="">Sélectionner un livre</option>
+                {% for livre in livres %}
+                    <option value="{{ livre.livre_id }}" {% if livre_id|default:'' == livre.livre_id|stringformat:'s' %}selected{% endif %}>{{ livre.titre_livre }} ({{ livre.nombre_exemplaires }} dispo)</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="date_emprunt" class="form-label">Date d'emprunt</label>
+            <input type="date" class="form-control" id="date_emprunt" name="date_emprunt" value="{{ date_emprunt|default:None }}">
+        </div>
+        <div class="mb-3">
+            <label for="date_retour" class="form-label">Date de retour prévue</label>
+            <input type="date" class="form-control" id="date_retour" name="date_retour" value="{{ date_retour|default:None }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer l'emprunt</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary ms-2">Annuler</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,349 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header bg-gradient text-white p-4" style="background-color: #8B5E3C;">
+                    <h2 class="text-center mb-0" style="font-family: 'Playfair Display', serif; color: white; font-weight: bold;">Mes Emprunts</h2>
+                </div>
+                <div class="card-body p-4">
+                    {% if emprunts %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Livre</th>
+                                    <th>Date d'emprunt</th>
+                                    <th>Date de retour</th>
+                                    <th>Statut</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for emprunt in emprunts %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if emprunt.livre.couverture %}
+                                            <img src="{{ emprunt.livre.couverture.url }}" alt="{{ emprunt.livre.titre_livre }}" class="me-2" style="width: 40px; height: 60px; object-fit: cover; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                            {% else %}
+                                            <div class="me-2 bg-light text-center" style="width: 40px; height: 60px; line-height: 60px; border-radius: 4px; border: 1px dashed #D2B48C;">📚</div>
+                                            {% endif %}
+                                            <div>
+                                                <strong>{{ emprunt.livre.titre_livre }}</strong>
+                                                <div class="text-muted small">{{ emprunt.livre.auteur_livre }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">{{ emprunt.date_emprunt|date:"d/m/Y" }}</td>
+                                    <td class="align-middle">{{ emprunt.date_retour|date:"d/m/Y"|default:"Non retourné" }}</td>
+                                    <td class="align-middle">
+                                        {% if not emprunt.date_retour %}
+                                            {% if emprunt.est_en_retard %}
+                                            <span class="badge rounded-pill bg-danger">En retard</span>
+                                            {% else %}
+                                            <span class="badge rounded-pill bg-warning">En cours</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge rounded-pill bg-success">Retourné le {{ emprunt.date_retour|date:"d/m/Y" }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <div class="btn-group">
+                                            {% if emprunt.id and not emprunt.date_retour %}
+                                            <a href="{% url 'retourner_livre' emprunt.id %}" class="btn btn-sm btn-success">
+                                                <i class="fas fa-undo"></i> Retourner
+                                            </a>
+                                            {% else %}
+                                            <button class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#receiptModal{{ emprunt.id }}">
+                                                <i class="fas fa-receipt"></i> Reçu
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Modals pour les reçus -->
+                    {% for emprunt in emprunts %}
+                    <div class="modal fade" id="receiptModal{{ emprunt.id }}" tabindex="-1" aria-labelledby="receiptModalLabel{{ emprunt.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content border-0">
+                                <div class="modal-header receipt-header border-0">
+                                    <h5 class="modal-title" id="receiptModalLabel{{ emprunt.id }}">Reçu d'emprunt</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-4">
+                                    <div class="receipt-container">
+                                        <div class="receipt-logo-container text-center mb-4">
+                                            <!-- Logo plus élaboré -->
+                                            <div class="booknova-logo mx-auto position-relative mb-3">
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <div class="book-icon me-2">
+                                                        <i class="fas fa-book-open fa-3x" style="color: #8B5E3C;"></i>
+                                                    </div>
+                                                    <div class="logo-text" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; letter-spacing: 3px; color: #8B5E3C;">
+                                                        <span>BOOK</span><span style="color: #D2B48C;">NOVA</span>
+                                                    </div>
+                                                </div>
+                                                <div class="logo-subtitle text-center" style="font-size: 0.8rem; color: #a1887f; letter-spacing: 1.5px;">BIBLIOTHÈQUE NUMÉRIQUE</div>
+                                            </div>
+                                            
+                                            <!-- Cachet incliné stylisé avec le nom de l'entreprise -->
+                                            <div class="position-relative">
+                                                <div class="booknova-stamp mx-auto" style="transform: rotate(-15deg); position: absolute; top: -15px; right: 30px; z-index: 10;">
+                                                    <div class="stamp-outer" style="border: 2px dashed #D2B48C; width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: rgba(248, 244, 239, 0.8);">
+                                                        <div class="stamp-inner" style="border: 1px solid #8B5E3C; width: 110px; height: 110px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: rgba(210, 180, 140, 0.2);">
+                                                            <div class="stamp-text" style="font-family: 'Playfair Display', serif; color: #8B5E3C; font-weight: bold; font-size: 1.1rem;">BookNova</div>
+                                                            <div style="width: 80%; height: 1px; background-color: #D2B48C; margin: 5px 0;"></div>
+                                                            <div class="stamp-date" style="font-size: 0.8rem; color: #a1887f;">{{ emprunt.date_emprunt }}</div>
+                                                            <div class="stamp-approved" style="font-family: 'Montserrat', sans-serif; color: #28a745; font-weight: bold; font-size: 0.8rem; margin-top: 5px;">APPROUVÉ</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="receipt-title text-center mb-4" style="position: relative;">
+                                            <div class="decorative-line" style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, rgba(210,180,140,0), rgba(210,180,140,1) 20%, rgba(210,180,140,1) 80%, rgba(210,180,140,0)); z-index: -1;"></div>
+                                            <h4 class="mb-0 d-inline-block px-3" style="color: #8B5E3C; font-weight: bold; letter-spacing: 2px; background-color: white; font-family: 'Playfair Display', serif;">REÇU D'EMPRUNT</h4>
+                                            <div style="font-size: 1.05rem; color: #a1887f; margin-top: 8px;">Numéro : <span style="font-weight: 600; color: #8B5E3C;">#{{ emprunt.id }}</span></div>
+                                        </div>
+                                        
+                                        <div class="receipt-details" style="border: 1px solid rgba(210,180,140,0.3); border-radius: 12px; padding: 20px; background-color: rgba(248,244,239,0.5); box-shadow: 0 2px 10px rgba(139,94,60,0.1);">
+                                            <!-- Détails de l'emprunt avec style amélioré -->
+                                            <div class="transaction-info d-flex align-items-center justify-content-between mb-4 pb-3" style="border-bottom: 1px dashed rgba(210,180,140,0.6);">
+                                                <div>
+                                                    <div style="font-size: 0.8rem; text-transform: uppercase; color: #a1887f; letter-spacing: 1px; margin-bottom: 3px;">Date d'emprunt</div>
+                                                    <div style="font-weight: 600; color: #8B5E3C;">{{ emprunt.date_emprunt }}</div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <div style="font-size: 0.8rem; text-transform: uppercase; color: #a1887f; letter-spacing: 1px; margin-bottom: 3px;">Date de retour</div>
+                                                    <div style="font-weight: 600; color: #8B5E3C;">{{ emprunt.date_retour|default:'En cours' }}</div>
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="book-info mb-4">
+                                                <h5 class="mb-3" style="color:#8B5E3C; font-weight:700; font-family: 'Playfair Display', serif; position: relative; display: inline-block;">
+                                                    <i class="fas fa-book-open me-2" style="color: #D2B48C;"></i>Détails du livre
+                                                    <div style="position: absolute; bottom: -3px; left: 0; width: 50%; height: 2px; background-color: #D2B48C;"></div>
+                                                </h5>
+                                                <div class="d-flex align-items-center p-3 rounded shadow-sm" style="background-color: #f8f3ec; border-left: 4px solid #D2B48C;">
+                                                    {% if emprunt.livre.image %}
+                                                        <img src="{{ emprunt.livre.image.url }}" alt="{{ emprunt.livre.titre }}" class="rounded me-3" style="width: 70px; height: 90px; object-fit: cover; border: 1px solid #e6d5c3; box-shadow: 0 3px 6px rgba(0,0,0,0.1);">
+                                                    {% else %}
+                                                        <div class="d-flex align-items-center justify-content-center bg-light me-3" style="width: 70px; height: 90px; border: 1px solid #e6d5c3; box-shadow: 0 3px 6px rgba(0,0,0,0.1);">
+                                                            <i class="fas fa-book fa-2x" style="color: #D2B48C;"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div>
+                                                        <div style="font-size: 1.1rem; font-weight: 600; color: #5d4037;">{{ emprunt.livre.titre }}</div>
+                                                        <div style="font-size: 0.97rem;">Auteur : <span class="text-muted">{{ emprunt.livre.auteur }}</span></div>
+                                                        <div style="font-size: 0.95rem;">ISBN : <span class="text-muted">{{ emprunt.livre.isbn|default:'Non disponible' }}</span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="dates-info mb-4">
+                                                <h5 class="mb-3" style="color:#8B5E3C; font-weight:700; font-family: 'Playfair Display', serif; position: relative; display: inline-block;">
+                                                    <i class="fas fa-clock me-2" style="color: #D2B48C;"></i>Détails de l'emprunt
+                                                    <div style="position: absolute; bottom: -3px; left: 0; width: 50%; height: 2px; background-color: #D2B48C;"></div>
+                                                </h5>
+                                                <div class="row g-3">
+                                                    <div class="col-6">
+                                                        <div class="date-card p-3 text-center rounded" style="background: linear-gradient(145deg, #ffffff, #f8f4ef); border: 1px solid rgba(210,180,140,0.3); box-shadow: 0 3px 10px rgba(139,94,60,0.08);">
+                                                            <div class="date-icon mb-2" style="color: #8B5E3C;">
+                                                                <i class="fas fa-calendar-check fa-2x"></i>
+                                                            </div>
+                                                            <p class="mb-1" style="font-size: 0.85rem; color: #a1887f; text-transform: uppercase; letter-spacing: 1px;">Emprunté le</p>
+                                                            <p class="date-value" style="font-weight: 600; color: #8B5E3C; font-size: 1.1rem;">{{ emprunt.date_emprunt }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="date-card p-3 text-center rounded" style="background: linear-gradient(145deg, #ffffff, #f8f4ef); border: 1px solid rgba(210,180,140,0.3); box-shadow: 0 3px 10px rgba(139,94,60,0.08);">
+                                                            <div class="date-icon mb-2" style="color: #D2B48C;">
+                                                                <i class="fas fa-calendar-day fa-2x"></i>
+                                                            </div>
+                                                            <p class="mb-1" style="font-size: 0.85rem; color: #a1887f; text-transform: uppercase; letter-spacing: 1px;">À retourner avant</p>
+                                                            <p class="date-value" style="font-weight: 600; color: #8B5E3C; font-size: 1.1rem;">{{ emprunt.date_retour|default:'Non défini' }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Section du statut supprimée comme demandé -->
+                                            <div class="member-info p-3 mb-4" style="background-color: rgba(248,244,239,0.6); border-radius: 8px; border-left: 4px solid #8B5E3C;">
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <div class="member-icon me-3" style="background-color: rgba(139,94,60,0.1); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                                        <i class="fas fa-user fa-lg" style="color: #8B5E3C;"></i>
+                                                    </div>
+                                                    <div class="member-details text-start">
+                                                        <div style="font-size: 0.85rem; color: #a1887f; text-transform: uppercase; letter-spacing: 1px;">Membre</div>
+                                                        <div style="font-size: 1.1rem; font-weight: 700; color: #8B5E3C;">{{ user.first_name }} {{ user.last_name }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="receipt-footer text-center mt-4 position-relative">
+                                            <!-- Décoration du pied de page -->
+                                            <div class="decorative-line" style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, rgba(210,180,140,0), rgba(210,180,140,1) 20%, rgba(210,180,140,1) 80%, rgba(210,180,140,0));"></div>
+                                            
+                                            <div class="thank-you my-4" style="font-family: 'Playfair Display', serif; font-size: 1.3rem; color:#8B5E3C; font-weight:700;">
+                                                Merci d'utiliser <span style="background: linear-gradient(to right, #8B5E3C, #D2B48C); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">BookNova</span> !
+                                            </div>
+                                            
+                                            <div class="library-info mb-2 d-flex align-items-center justify-content-center" style="font-size: 0.9rem; color: #a1887f;">
+                                                <i class="fas fa-map-marker-alt me-2" style="color: #D2B48C;"></i>
+                                                <span>123 Avenue des Livres, 75000 Paris</span>
+                                            </div>
+                                            
+                                            <div class="contact-info d-flex align-items-center justify-content-center" style="font-size: 0.9rem; color: #a1887f;">
+                                                <i class="fas fa-envelope me-2" style="color: #D2B48C;"></i>
+                                                <span>contact@booknova.fr</span>
+                                                <span class="mx-2">|</span>
+                                                <i class="fas fa-phone-alt me-2" style="color: #D2B48C;"></i>
+                                                <span>01 23 45 67 89</span>
+                                            </div>
+                                            
+                                            <div class="receipt-id mt-3" style="font-size: 0.8rem; color: #c0b3a8;">
+                                                ID de transaction: #BN{{ emprunt.emprunt_id }}{{ emprunt.date_emprunt|date:"Ymd" }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0 justify-content-center">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="text-center py-5">
+                        <div class="mb-4">
+                            <i class="fas fa-book" style="font-size: 3rem; color: #8B5E3C;"></i>
+                        </div>
+                        <p class="lead text-muted mb-4">Vous n'avez aucun emprunt en cours.</p>
+                        <a href="{% url 'catalogue' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus-circle"></i> Emprunter un livre
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+    
+    .book-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+    
+    /* Style pour le reçu */
+    .receipt-header {
+        background: linear-gradient(135deg, #8B5E3C, #A67C52);
+        color: white;
+    }
+    
+    .receipt-container {
+        background-color: #fff;
+        border-radius: 8px;
+    }
+    
+    .booknova-stamp {
+        width: 100px;
+        height: 100px;
+        background-color: rgba(139, 94, 60, 0.1);
+        border: 2px solid #8B5E3C;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: rotate(-12deg);
+    }
+    
+    .stamp-inner {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px dashed #8B5E3C;
+    }
+    
+    .stamp-text {
+        color: #8B5E3C;
+        font-weight: bold;
+        font-size: 18px;
+        font-family: 'Playfair Display', serif;
+    }
+    
+    .info-card {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #8B5E3C;
+    }
+    
+    .date-card {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        height: 100%;
+    }
+    
+    .date-icon {
+        color: #8B5E3C;
+        font-size: 24px;
+    }
+    
+    .date-value {
+        font-weight: bold;
+        color: #8B5E3C;
+    }
+    
+    .receipt-footer {
+        border-top: 1px dashed #dee2e6;
+        padding-top: 15px;
+        margin-top: 20px;
+    }
+    
+    .thank-you {
+        font-weight: bold;
+        color: #8B5E3C;
+        font-family: 'Playfair Display', serif;
+    }
+    
+    /* Pour l'impression */
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        .modal-content * {
+            visibility: visible;
+        }
+        .modal-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

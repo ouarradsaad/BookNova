@@ -1,0 +1,36 @@
+{% extends 'library/Dashboard.html' %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Ajouter un lecteur</h2>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="prenom" class="form-label">Prénom</label>
+            <input type="text" class="form-control" id="prenom" name="prenom" required value="{{ prenom|default:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom</label>
+            <input type="text" class="form-control" id="nom" name="nom" required value="{{ nom|default:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required value="{{ email|default:'' }}">
+        </div>
+        <div class="mb-3">
+            <label for="mot_de_passe" class="form-label">Mot de passe</label>
+            <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" required>
+        </div>
+        <div class="mb-3">
+            <label for="confirm_mot_de_passe" class="form-label">Confirmer le mot de passe</label>
+            <input type="password" class="form-control" id="confirm_mot_de_passe" name="confirm_mot_de_passe" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary ms-2">Annuler</a>
+    </form>
+</div>
+{% endblock %}

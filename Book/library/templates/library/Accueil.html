@@ -1,0 +1,859 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue à BookNova</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #D2B48C;
+            --bg-color: #f8f4ef;
+            --gradient-start: #f8f4ef;
+            --gradient-end: #e8e1d9;
+        }
+        body {
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg-color);
+    color: #333;
+}
+        header {
+    background: transparent !important;
+    padding: 1rem;
+    box-shadow: none;
+    border-radius: 0;
+}
+.navbar {
+    background-color: #D2B48C !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.navbar-nav .nav-link {
+    color: #2c3e50 !important;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: color 0.2s, text-shadow 0.2s;
+    text-shadow: 0 1px 6px rgba(210,180,140,0.10);
+}
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+    color: #fff !important;
+    background: rgba(210,180,140,0.13);
+    border-radius: 0.75rem;
+    text-shadow: 0 2px 12px #bfa76a;
+}
+.navbar-brand {
+    font-family: 'Pacifico', cursive;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    color: #000 !important;
+    text-shadow: 0 2px 8px #e1b56e, 0 1px 6px #fff;
+    background: transparent !important;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-shadow: 0 2px 8px rgba(210,180,140,0.10);
+    transition: all 0.3s ease;
+}
+.navbar-brand:hover {
+    color: #fff !important;
+    text-shadow: 0 4px 15px rgba(210,180,140,0.5);
+    transform: scale(1.05);
+}
+.navbar-brand img {
+    height: 60px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+}
+
+@media (max-width: 991px) {
+    .navbar {
+        border-radius: 0 0 1rem 1rem;
+    }
+}
+nav[style] {
+    background: rgba(255,255,255,0.18) !important;
+    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.10);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 0 0 1.5rem 1.5rem;
+    border: 1px solid rgba(255,255,255,0.18);
+}
+        .navbar-brand img {
+            height: 60px;
+            width: auto;
+            margin: -10px 0;
+        }
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: #f8f4ef !important;
+        }
+        
+        /* Styles pour les notifications */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.4rem;
+        }
+        
+        #notificationsDropdown {
+            position: relative;
+            padding-right: 1rem;
+        }
+        
+        .notification-menu {
+            margin-top: 0.5rem;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+        }
+        
+        .notification-menu .dropdown-header {
+            background: #D2B48C;
+            color: white;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+        
+        .notification-menu .dropdown-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .notification-menu .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-menu .dropdown-item:hover {
+            background-color: #f8f4ef;
+        }
+        .hero {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('{% static "library/images/Livre.jpg" %}') center center / cover no-repeat;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    color: white;
+    background-size: 120% auto;
+}
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    text-shadow: 0 8px 32px rgba(44,62,80,0.6), 0 2px 8px #D2B48C;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #ffe4b5 0%, #d2b48c 40%, #fff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: pop-title 1.2s cubic-bezier(.19,1,.22,1);
+}
+@keyframes pop-title {
+    0% { transform: scale(0.8) translateY(60px); opacity: 0; }
+    80% { transform: scale(1.08) translateY(-10px); opacity: 1; }
+    100% { transform: scale(1) translateY(0); }
+}
+.hero-subtitle {
+    font-size: 2.2rem;
+    color: #fff;
+    font-weight: 500;
+    text-shadow: 0 2px 12px rgba(44,62,80,0.5);
+    margin-bottom: 0.5rem;
+    animation: fade-in-sub 1.6s cubic-bezier(.19,1,.22,1);
+}
+@keyframes fade-in-sub {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+        .search-box {
+            background: rgba(255,255,255,0.95);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .book-card {
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+        .book-cover {
+            height: 200px;
+            object-fit: cover;
+        }
+        .rating {
+            color: var(--secondary-color);
+        }
+        .btn-primary {
+    background-color: #D2B48C !important;
+    border-color: #D2B48C !important;
+    color: #fff !important;
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+        .btn-primary:hover {
+    background-color: #c19a6b !important;
+    border-color: #c19a6b !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+        .personal-space {
+    background: #fff url('{% static "library/images/marble-light.jpg" %}');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-blend-mode: lighten;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px 0 rgba(44,62,80,0.10);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.18);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+.personal-space::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('{% static "library/images/gold-pattern.svg" %}');
+    opacity: 0.07;
+    pointer-events: none;
+    border-radius: 1.5rem;
+}
+
+
+.personal-space::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('{% static "library/images/pattern.png" %}');
+    opacity: 0.08;
+    pointer-events: none;
+    border-radius: 1.5rem;
+}
+
+
+        .services-section {
+            background: linear-gradient(135deg, var(--gradient-end), var(--gradient-start));
+            position: relative;
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-color);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .fa-3x {
+            color: var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .fa-3x {
+            transform: scale(1.1);
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        .card-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Styles pour la section Comment ça marche */
+        .step-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background: var(--secondary-color) !important;
+            transition: transform 0.3s ease;
+        }
+
+        .steps .d-flex:hover .step-number {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .steps h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .steps p {
+            color: #666;
+            margin-bottom: 0;
+        }
+
+        .img-fluid.rounded.shadow {
+            border-radius: 20px !important;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+            transition: transform 0.3s ease;
+        }
+
+        .img-fluid.rounded.shadow:hover {
+            transform: scale(1.02);
+        }
+        .category-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 1.1rem;
+        }
+        .availability {
+            font-weight: bold;
+        }
+        .available {
+            color: #28a745;
+        }
+        .unavailable {
+            color: #dc3545;
+        }
+        /* Ajout du style logo seul sans fond ni conteneur */
+        .logo {
+          width: 150px;
+          display: block;
+          margin: 32px auto 16px auto;
+          border-radius: 50%;
+          box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.8);
+          position: static;
+          z-index: 2;
+          animation: pop-title-center 1.6s cubic-bezier(.19,1,.22,1);
+          animation-fill-mode: both;
+          border: none;
+          background: none;
+        }
+        @keyframes pop-title-center {
+          0% { opacity: 0; transform: scale(0.8) translateY(60px); }
+          80% { opacity: 1; transform: scale(1.08) translateY(-10px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .services-section {
+            background: linear-gradient(135deg, var(--gradient-end), var(--gradient-start));
+            position: relative;
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-color);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .fa-3x {
+            color: var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .fa-3x {
+            transform: scale(1.1);
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        .card-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Styles pour la section Comment ça marche */
+        .step-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background: var(--secondary-color) !important;
+            transition: transform 0.3s ease;
+        }
+
+        .steps .d-flex:hover .step-number {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .steps h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .steps p {
+            color: #666;
+            margin-bottom: 0;
+        }
+
+        .img-fluid.rounded.shadow {
+            border-radius: 20px !important;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+            transition: transform 0.3s ease;
+        }
+
+        .img-fluid.rounded.shadow:hover {
+            transform: scale(1.02);
+        }
+        .category-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 1.1rem;
+        }
+        .availability {
+            font-weight: bold;
+        }
+        .available {
+            color: #28a745;
+        }
+        .unavailable {
+            color: #dc3545;
+        }
+        /* Ajout du style form-container et logo pour l'image */
+        .form-container {
+          width: 400px;
+          background-color: rgba(66, 36, 2, 0.37);
+          border-radius: 1rem;
+          padding: 1rem;
+          color: #f5f5f5;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+          animation: fadeIn 1.2s ease-out forwards;
+          transform: translateY(30px);
+          opacity: 0;
+          position: relative;
+          backdrop-filter: blur(8px);
+        }
+        @keyframes fadeIn {
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        .logo {
+          width: 100px;
+          position: absolute;
+          top: 140px;
+          left: 45%;
+          transform: translateX(-50%);
+          border-radius: 50%;
+          box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body style="background: #f8f4ef;">
+    <header style="background: #D2B48C; margin: 0; padding: 0; border: none;">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="{% url 'accueil' %}" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; letter-spacing: 3px; color: #fff; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">
+                    <span style="color: #8B5E3C; font-weight: bold;">BOOKNOVA</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'accueil' %}">Accueil</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'catalogue' %}">Catalogue</a></li>
+                        <li class="nav-item">
+    <a class="nav-link" href="{% url 'a_propos' %}">À propos</a>
+</li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'connexion' %}">Déconnexion</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge bg-danger notification-badge" style="display: none;">0</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notificationsDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+                                <h6 class="dropdown-header">Notifications d'amendes</h6>
+                                <div id="notificationsList">
+                                    <!-- Les notifications seront insérées ici dynamiquement -->
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Logo centralisé et sans marge excessive -->
+    <img src="{% static 'library/images/Logo.jpg' %}" alt="Logo BookNova" class="logo">
+    <!-- Hero Section avec Recherche, texte décalé vers le bas mais pas l'image -->
+    <section class="hero py-5">
+    <div class="container">
+        <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 40vh; margin-top: 70px;">
+            <h1 class="hero-title text-center mb-3" style="font-size:5rem; letter-spacing:3px; text-shadow: 0 12px 40px rgba(44,62,80,0.7), 0 4px 16px #D2B48C; background: linear-gradient(90deg, #ffe4b5 0%, #d2b48c 50%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: pop-title 1.6s cubic-bezier(.19,1,.22,1);">Découvrez notre bibliothèque</h1>
+<p class="hero-subtitle text-center" style="font-size:2.8rem; font-weight:600; color:#fff; text-shadow:0 4px 20px rgba(44,62,80,0.7); margin-bottom:1.5rem; animation: fade-in-sub 2s cubic-bezier(.19,1,.22,1); letter-spacing:2px;">Plus de 10,000 livres à votre disposition</p>
+        </div>
+    </div>
+</section>
+
+    <!-- Catalogue Section -->
+    <section id="catalogue" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Nouveautés</h2>
+            <div class="row g-4">
+    {% if livres %}
+        {% for livre in livres|slice:":4" %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card book-card h-100">
+                    {% if livre.couverture %}
+  <img src="{{ livre.couverture.url }}" class="card-img-top book-cover" alt="Livre">
+{% else %}
+  <img src="{% static 'library/images/roman.jpg' %}" class="card-img-top book-cover" alt="Livre">
+{% endif %}
+                    <div class="card-body">
+                        <span class="category-badge mb-2 d-inline-block">{{ livre.categorie_livre|default:'Autre' }}</span>
+                        <h5 class="card-title">{{ livre.titre_livre }}</h5>
+                        <p class="card-text">{{ livre.auteur_livre }}</p>
+                        <p class="availability available">
+                            <i class="fas fa-check-circle"></i>
+                            {% if livre.nombre_exemplaires > 0 %}Disponible{% else %}Indisponible{% endif %}
+                        </p>
+                        <a href="{% url 'catalogue' %}" class="btn btn-primary w-100">Passer au Catalogue</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-warning text-center">Aucun livre trouvé.</div>
+        </div>
+    {% endif %}
+</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Mon Compte -->
+    <section class="personal-space py-5">
+        <div class="container">
+            <h2 class="text-center mb-5 section-title">Mon Espace Personnel</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-book fa-3x mb-3 text-primary"></i>
+                            <h3 class="card-title h5">Mes Emprunts</h3>
+                            <p class="card-text">Consultez vos emprunts en cours </p>
+                            <a href="{% url 'mes_emprunts' %}" class="btn btn-primary">Voir mes emprunts</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-bookmark fa-3x mb-3 text-primary"></i>
+                            <h3 class="card-title h5">Mes Réservations</h3>
+                            <p class="card-text">Gérez vos réservations de livres en cours</p>
+                            <a href="{% url 'mes_reservations' %}" class="btn btn-primary">Voir mes réservations</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-star fa-3x mb-3 text-primary"></i>
+                            <h3 class="card-title h5">Mes Avis</h3>
+                            <p class="card-text">Donnez votre avis sur les livres que vous avez lus</p>
+                            <a href="{% url 'mes_avis' %}" class="btn btn-primary">Gérer mes avis</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Services -->
+    <section class="services-section py-5">
+        <div class="container">
+            <h2 class="text-center mb-5 section-title">Nos Services</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 service-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-book-reader fa-3x mb-3 text-primary"></i>
+                            <h3 class="h4 mb-3">Emprunts Faciles</h3>
+                            <p class="card-text">Empruntez jusqu'à 5 livres simultanément pour une durée de 3 semaines. Prolongation possible en ligne.</p>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 service-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-clock fa-3x mb-3 text-primary"></i>
+                            <h3 class="h4 mb-3">Réservation en Ligne</h3>
+                            <p class="card-text">Réservez vos livres à l'avance et recevez une notification dès qu'ils sont disponibles.</p>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 service-card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-star fa-3x mb-3 text-primary"></i>
+                            <h3 class="h4 mb-3">Recommandations</h3>
+                            <p class="card-text">Découvrez des livres personnalisés selon vos goûts et votre historique de lecture.</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Comment ça marche -->
+    <section class="py-5" style="background: linear-gradient(135deg, var(--gradient-end), var(--gradient-start))">
+        <div class="container">
+            <h2 class="text-center mb-5">Comment ça marche ?</h2>
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="{% static 'library/images/cm2.png' %}" alt="Comment ça marche" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-lg-6">
+                    <div class="steps">
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="step-number bg-primary text-white rounded-circle p-3 me-3">1</div>
+                            <div>
+                                <h3 class="h5">Créez votre compte</h3>
+                                <p>Inscrivez-vous gratuitement en quelques clics pour accéder à tous nos services.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="step-number bg-primary text-white rounded-circle p-3 me-3">2</div>
+                            <div>
+                                <h3 class="h5">Parcourez le catalogue</h3>
+                                <p>Explorez notre vaste collection de livres et trouvez vos prochaines lectures.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start">
+                            <div class="step-number bg-primary text-white rounded-circle p-3 me-3">3</div>
+                            <div>
+                                <h3 class="h5">Empruntez ou réservez</h3>
+                                <p>Choisissez vos livres et venez les récupérer à la bibliothèque.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Statistiques -->
+    <section class="py-5 bg-primary text-white">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-md-3">
+                    <i class="fas fa-books fa-3x mb-3"></i>
+                    <h2 class="h4">10,000+</h2>
+                    <p>Livres disponibles</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-users fa-3x mb-3"></i>
+                    <h2 class="h4">5,000+</h2>
+                    <p>Lecteurs actifs</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-bookmark fa-3x mb-3"></i>
+                    <h2 class="h4">1,000+</h2>
+                    <p>Emprunts par mois</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-star fa-3x mb-3"></i>
+                    <h2 class="h4">4.8/5</h2>
+                    <p>Note moyenne</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer amélioré -->
+    <footer class="py-5" style="background-color: var(--secondary-color);">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5 class="fw-bold mb-3" style="font-family:'Playfair Display',serif;font-size:2.2rem;letter-spacing:2.5px;text-transform:uppercase;color:#6d4c1c;text-shadow:0 2px 8px #e1b56e,0 1px 6px #fff;display:flex;align-items:center;gap:0.5em;">
+                        <i class="fas fa-book-open" style="font-size:2rem;color:#a67c52;text-shadow:0 2px 8px #ffe2b7;"></i>
+                        BOOKNOVA
+                    </h5>
+                    <p class="text-dark mb-0">Votre bibliothèque en ligne moderne et accessible. Découvrez, lisez et partagez vos lectures préférées dans un environnement chaleureux et convivial.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="fw-bold mb-3">Liens rapides</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#catalogue" class="text-dark text-decoration-none">📚 Catalogue</a></li>
+                        <li class="mb-2"><a href="#about" class="text-dark text-decoration-none">ℹ️ À propos</a></li>
+                        <li class="mb-2"><a href="#contact" class="text-dark text-decoration-none">📞 Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="fw-bold mb-3">Horaires d'ouverture</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">📅 Lundi - Vendredi: 9h - 18h</li>
+                        <li class="mb-2">📅 Samedi: 10h - 16h</li>
+                        <li class="mb-2">📅 Dimanche: Fermé</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col text-center">
+                    <div class="social-links">
+                        <a href="#" class="text-dark me-4 text-decoration-none"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-dark me-4 text-decoration-none"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-dark me-4 text-decoration-none"><i class="fab fa-instagram fa-lg"></i></a>
+                    </div>
+                    <p class="mt-3 mb-0 text-dark">&copy; 2025 BookNova. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .service-card {
+            transition: transform 0.3s ease;
+            border: none;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .social-links a {
+            transition: opacity 0.3s ease;
+        }
+        .social-links a:hover {
+            opacity: 0.8;
+        }
+    </style>
+    <!-- Scripts Bootstrap et Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fonction pour charger les notifications
+        function loadNotifications() {
+            fetch('{% url "get_amendes_notifications" %}')
+                .then(response => response.json())
+                .then(data => {
+                    const notificationsList = document.getElementById('notificationsList');
+                    const badge = document.querySelector('.notification-badge');
+                    
+                    if (data.amendes && data.amendes.length > 0) {
+                        badge.style.display = 'inline';
+                        badge.textContent = data.amendes.length;
+                        
+                        notificationsList.innerHTML = data.amendes.map(amende => `
+                            <div class="dropdown-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>${amende.livre}</strong><br>
+                                        <small>Retard: ${amende.jours_retard} jours</small><br>
+                                        <small class="text-danger">Amende: ${amende.montant} DH</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                        `).join('');
+                    } else {
+                        badge.style.display = 'none';
+                        notificationsList.innerHTML = '<div class="dropdown-item text-center">Aucune amende en cours</div>';
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        }
+
+        // Charger les notifications au chargement de la page
+        document.addEventListener('DOMContentLoaded', loadNotifications);
+
+        // Rafraîchir les notifications toutes les 5 minutes
+        setInterval(loadNotifications, 300000);
+    </script>
+</body>
+</html>

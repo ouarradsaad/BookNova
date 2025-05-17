@@ -1,0 +1,349 @@
+{% extends "library/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .payment-container {
+        max-width: 600px;
+        margin: 4rem auto;
+        padding: 2rem;
+        background: #fffbe9;
+        border-radius: 1.5rem;
+        box-shadow: 0 12px 32px rgba(44,62,80,0.1);
+        border: 1px solid #e9e2d0;
+    }
+    .payment-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .payment-header h2 {
+        color: #8d6e3f;
+        font-weight: 700;
+    }
+    .payment-header p {
+        color: #666;
+        margin-top: 0.5rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 500;
+    }
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e9e2d0;
+        border-radius: 0.5rem;
+        background: #fff;
+        font-family: 'Montserrat', Arial, sans-serif;
+        transition: border-color 0.2s;
+    }
+    .form-control:focus {
+        border-color: #bfa76a;
+        outline: none;
+        box-shadow: none;
+    }
+    .card-details {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    .payment-button {
+        background: linear-gradient(90deg, #bfa76a 0%, #d2b48c 100%);
+        color: #fff;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 1rem;
+    }
+    .payment-button:hover {
+        background: linear-gradient(90deg, #d2b48c 0%, #bfa76a 100%);
+        transform: translateY(-2px);
+    }
+    .payment-button:active {
+        transform: translateY(0);
+    }
+    .card-image {
+        width: 100%;
+        max-width: 300px;
+        margin: 2rem auto;
+        display: block;
+    }
+    .card-input {
+        padding: 0.75rem;
+        border: 1px solid #e9e2d0;
+        border-radius: 0.5rem;
+        background: #fff;
+        font-family: 'Montserrat', Arial, sans-serif;
+        transition: all 0.2s;
+    }
+    .card-input:focus {
+        border-color: #bfa76a;
+        box-shadow: 0 0 0 2px rgba(191, 167, 106, 0.2);
+    }
+    .cvv-input {
+        width: 80px;
+    }
+    .expiry-input {
+        width: 120px;
+    }
+    .form-check-input {
+        margin-right: 0.5rem;
+    }
+    
+    /* Styles pour le message de succès */
+    .success-container {
+        text-align: center;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        border: 2px solid #28a745;
+        animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .success-icon {
+        font-size: 4rem;
+        color: #28a745;
+        margin-bottom: 1rem;
+    }
+    .success-title {
+        color: #28a745;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+    .success-message {
+        color: #333;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+    }
+    .success-details {
+        background: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        text-align: left;
+    }
+    .success-details h4 {
+        color: #8d6e3f;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    .success-details p {
+        margin-bottom: 0.5rem;
+        color: #555;
+    }
+    .success-details strong {
+        color: #333;
+    }
+    .download-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        text-decoration: none;
+        margin-right: 1rem;
+    }
+    .download-btn:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+    .download-btn i {
+        margin-right: 0.5rem;
+    }
+    .return-btn {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+    .return-btn:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+    .return-btn i {
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    {% if not paiement_reussi %}
+    // Validation du formulaire
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+
+    // Masque pour le numéro de carte
+    document.getElementById('numeroCarte').addEventListener('input', function(e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : x[1] + ' ' + x[2] + (x[3] ? ' ' + x[3] : '') + (x[4] ? ' ' + x[4] : '');
+    });
+
+    // Masque pour la date d'expiration
+    document.getElementById('dateExpiration').addEventListener('input', function(e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,2})/);
+        e.target.value = !x[2] ? x[1] : x[1] + '/' + x[2];
+    });
+
+    // Masque pour le CVV
+    document.getElementById('cvv').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+    });
+    {% endif %}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="payment-container">
+    {% if paiement_reussi %}
+    <!-- Affichage du message de succès -->
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2 class="success-title">Paiement réussi !</h2>
+        <p class="success-message">Votre emprunt a été enregistré avec succès. Vous pouvez télécharger votre reçu ci-dessous.</p>
+        
+        <div class="success-details">
+            <h4>Détails de l'emprunt</h4>
+            <p><strong>Livre :</strong> {{ livre.titre_livre }}</p>
+            <p><strong>Auteur :</strong> {{ livre.auteur_livre }}</p>
+            <p><strong>Date d'emprunt :</strong> {{ date_emprunt }}</p>
+            <p><strong>Date de retour prévue :</strong> {{ date_retour }}</p>
+        </div>
+        
+        <div class="text-center">
+            <a href="{% url 'telecharger_reçu' emprunt.emprunt_id %}" class="download-btn">
+                <i class="fas fa-file-pdf"></i> Télécharger le reçu
+            </a>
+            <a href="{% url 'catalogue' %}" class="return-btn">
+                <i class="fas fa-book"></i> Retour au catalogue
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <!-- Formulaire de paiement -->
+    <div class="payment-header">
+        <h2>Informations de Paiement</h2>
+        <p>Veuillez remplir les informations de paiement pour finaliser l'emprunt</p>
+    </div>
+
+    <!-- Section des cartes acceptées -->
+    <div class="accepted-cards" style="text-align: center; margin-bottom: 2rem;">
+        <h5 style="font-weight: 600; color: #8d6e3f; margin-bottom: 1rem;">Cartes acceptées</h5>
+        <div style="display: flex; justify-content: center; gap: 15px;">
+            <img src="{% static 'library/images/visa.jpg' %}" alt="Visa" style="height: 30px;">
+            <img src="{% static 'library/images/american.png' %}" alt="American Express" style="height: 30px;">
+            <img src="{% static 'library/images/mastercard.jpg' %}" alt="MasterCard" style="height: 30px;">
+            <img src="{% static 'library/images/discover.jpg' %}" alt="Discover" style="height: 30px;">
+        </div>
+    </div>
+
+    <form method="POST" action="{% url 'paiement' livre.livre_id %}" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="nom">Nom complet</label>
+            <input type="text" class="form-control" id="nom" name="nom" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="telephone">Numéro de téléphone</label>
+            <input type="tel" class="form-control" id="telephone" name="telephone" required>
+        </div>
+
+        <div class="card-details">
+            <div class="form-group">
+                <label for="numeroCarte">Numéro de carte</label>
+                <input type="text" class="form-control card-input" id="numeroCarte" name="numeroCarte" placeholder="XXXX XXXX XXXX XXXX" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nomCarte">Nom sur la carte</label>
+                <input type="text" class="form-control card-input" id="nomCarte" name="nomCarte" required>
+            </div>
+
+            <div class="form-group">
+                <label for="dateExpiration">Date d'expiration</label>
+                <input type="text" class="form-control card-input expiry-input" id="dateExpiration" name="dateExpiration" placeholder="MM/AA" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="text" class="form-control card-input cvv-input" id="cvv" name="cvv" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="conditions" required>
+                <label class="form-check-label" for="conditions">
+                    J'accepte les <a href="{% url 'conditions' %}" target="_blank">conditions d'utilisation</a>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="payment-button">Payer et finaliser l'emprunt</button>
+    </form>
+    {% endif %}
+    
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+                <div class="alert alert-danger mt-3">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

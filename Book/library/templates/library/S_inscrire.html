@@ -1,0 +1,298 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inscription - BookNova</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      height: 100vh;
+      overflow-y: auto;
+      background-color: #5837055d;
+      padding-top: 140px;
+      background: url("{% static 'library/images/Livre.jpg' %}") no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    #background-slideshow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      z-index: -1;
+      opacity: 1;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .form-container {
+      width: 600px;
+      background-color: rgba(66, 36, 2, 0.37);
+      border-radius: 1rem;
+      padding: 3rem;
+      color: #f5f5f5;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 1.2s ease-out forwards;
+      transform: translateY(10px);
+      opacity: 0;
+      position: relative;
+      backdrop-filter: blur(8px);
+    }
+
+    @keyframes fadeIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .logo {
+      width: 100px;
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.8);
+    }
+
+    .title {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-top: 15px;
+      margin-bottom: 1rem;
+      color: #e1b56e;
+    }
+
+    .form {
+      margin-top: 1rem;
+    }
+
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .form-row .input-group {
+      flex: 1;
+      min-width: 48%;
+    }
+
+    .input-group label {
+      display: block;
+      color: #e1b56e;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .input-group input {
+      width: 100%;
+      border-radius: 0.375rem;
+      border: 1px solid rgba(160, 130, 110, 0.6);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 0.5rem 0.8rem;
+      font-size: 0.9rem;
+      transition: border-color 0.3s ease;
+      color: black; /* Le texte tapé sera noir */
+    }
+
+    .input-group input:focus {
+      border-color: #2d1d04;
+      outline: none;
+    }
+
+    .user-type-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      color: #e1b56e;
+    }
+
+    .user-type-options {
+      display: flex;
+      gap: 4rem;
+      margin-left: 0.3rem;
+    }
+    
+
+    .user-type-options input[type="radio"] {
+      display: none;
+    }
+
+    .user-type-options label {
+      padding: 0.3rem 0.8rem;
+      background-color: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-radius: 0.4rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #ffffff;
+      font-size: 0.8rem;
+    }
+
+    .user-type-options input[type="radio"]:checked + label {
+      background-color: #ff9800;
+      color: #1e1e1e;
+      border-color: #ff9800;
+      box-shadow: 0 0 8px rgba(255, 152, 0, 0.6);
+    }
+
+    .sign {
+      width: 100%;
+      background-color: #e1b56e;
+      padding: 0.6rem;
+      text-align: center;
+      color: #3e2c24;
+      border: none;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .sign:hover {
+      background-color: #d1a45a;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      transform: scale(1.05);
+    }
+
+    .login {
+      text-align: center;
+      font-size: 0.8rem;
+      margin-top: 0.8rem;
+      color: #e1b56e;
+    }
+
+    .login a {
+      color: #f5f5f5;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .login a:hover {
+      text-decoration: underline;
+      color: #e1b56e;
+    }
+
+    /* Texte noir dans tous les champs */
+    input {
+      color: black;
+      background-color: white;
+    }
+
+    input::placeholder {
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div id="background-slideshow"></div>
+
+  <div class="form-container">
+    <img src="{% static 'library/images/Logo.jpg' %}" alt="Logo BookNova" class="logo">
+    <div class="title">Inscrivez-vous</div>
+
+    <form method="post" class="form" id="registerForm">
+      {% csrf_token %}
+      
+      {% if error %}
+        <div style="color: red; text-align: center; margin-bottom: 1rem;">
+          {{ error }}
+        </div>
+      {% endif %}
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" name="prenom" placeholder="Entrez votre prénom" required />
+        </div>
+
+        <div class="input-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" placeholder="Entrez votre nom" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="email">Adresse e-mail</label>
+          <input type="email" id="email" name="email" placeholder="Entrez votre email" required />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" name="password" placeholder="Mot de passe" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group">
+          <label for="confirmPassword">Confirmez le mot de passe</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmez votre mot de passe" required />
+        </div>
+      </div>
+
+      <button type="submit" class="sign">S'inscrire</button>
+
+      <div class="login">
+        Vous avez déjà un compte ? <a href="{% url 'connexion' %}">Se connecter</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const images = [
+      "{% static 'library/images/R.jpeg' %}",
+      "{% static 'library/images/Livre.jpg' %}",
+    ];
+
+    const slideshow = document.getElementById("background-slideshow");
+    let currentIndex = -1;
+
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    function getNextIndex() {
+      let nextIndex;
+      do {
+        nextIndex = Math.floor(Math.random() * images.length);
+      } while (nextIndex === currentIndex && images.length > 1);
+      return nextIndex;
+    }
+
+    function changeBackground() {
+      slideshow.style.opacity = 0;
+      setTimeout(() => {
+        currentIndex = getNextIndex();
+        slideshow.style.backgroundImage = `url('${images[currentIndex]}')`;
+        slideshow.style.opacity = 1;
+      }, 1000);
+    }
+
+    changeBackground();
+    setInterval(changeBackground, 8000);
+  </script>
+</body>
+</html>

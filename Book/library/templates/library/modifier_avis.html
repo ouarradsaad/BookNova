@@ -1,0 +1,109 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header bg-gradient text-white p-4" style="background-color: #8B5E3C;">
+                    <h2 class="text-center mb-0" style="font-family: 'Playfair Display', serif; color: white; font-weight: bold;">Modifier mon avis</h2>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center">
+                            {% if avis.livre.couverture %}
+                                <img src="{{ avis.livre.couverture.url }}" alt="{{ avis.livre.titre_livre }}" class="me-3" style="width: 80px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <div class="me-3 bg-light text-center" style="width: 80px; height: 100px; line-height: 100px;">📚</div>
+                            {% endif %}
+                            <div>
+                                <h4 class="mb-0">{{ avis.livre.titre_livre }}</h4>
+                                <p class="text-muted">{{ avis.livre.auteur_livre }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="note" class="form-label">Note</label>
+                            <div class="star-rating">
+                                <div class="rating-group">
+                                    <input disabled checked class="rating__input rating__input--none" name="note" id="rating-none" value="0" type="radio">
+                                    {% for i in '12345' %}
+                                        <label aria-label="{{ i }} star" class="rating__label" for="rating-{{ i }}">
+                                            <i class="rating__icon rating__icon--star fa fa-star"></i>
+                                        </label>
+                                        <input class="rating__input" name="note" id="rating-{{ i }}" value="{{ i }}" type="radio" {% if avis.note|stringformat:'d' == i %}checked{% endif %}>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="commentaire" class="form-label">Commentaire</label>
+                            <textarea class="form-control" id="commentaire" name="commentaire" rows="5" required>{{ avis.commentaire }}</textarea>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'mes_avis' %}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Style CSS pour le système d'évaluation par étoiles -->
+<style>
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        font-size: 1.5rem;
+        justify-content: flex-end;
+        padding: 0 0.2em;
+        text-align: center;
+        width: 5em;
+    }
+
+    .rating-group {
+        display: inline-flex;
+    }
+
+    .rating__input {
+        position: absolute !important;
+        left: -9999px !important;
+    }
+
+    .rating__label {
+        cursor: pointer;
+        padding: 0 0.1em;
+        font-size: 2rem;
+    }
+
+    .rating__icon--star {
+        color: #ddd;
+    }
+
+    .rating__input:checked ~ .rating__label .rating__icon--star {
+        color: #FFD700;
+    }
+
+    .rating__input:hover ~ .rating__label .rating__icon--star {
+        color: #FFD700;
+    }
+
+    /* Animation */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .rating__label:hover .rating__icon--star,
+    .rating__label:hover ~ .rating__label .rating__icon--star {
+        animation: pulse 1s;
+    }
+</style>
+{% endblock %}

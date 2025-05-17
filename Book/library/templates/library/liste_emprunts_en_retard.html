@@ -1,0 +1,33 @@
+{% extends 'library/Dashboard.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-5 text-center" style="font-family: 'Playfair Display', serif; font-weight: bold; color: #8B5E3C; letter-spacing: 2px;">Livres en retard</h2>
+    <div class="table-responsive">
+        <table class="custom-table table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Livre</th>
+                    <th>Lecteur</th>
+                    <th>Date d'emprunt</th>
+                    <th>Date de retour</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emprunt in emprunts %}
+                <tr>
+                    <td>{{ emprunt.emprunt_id }}</td>
+                    <td>{{ emprunt.livre.titre_livre }}</td>
+                    <td>{{ emprunt.lecteur.nom }} {{ emprunt.lecteur.prenom }}</td>
+                    <td>{{ emprunt.date_emprunt|date:'d/m/Y' }}</td>
+                    <td>{% if emprunt.date_retour %}{{ emprunt.date_retour|date:'d/m/Y' }}{% else %}-{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center">Aucun livre en retard.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

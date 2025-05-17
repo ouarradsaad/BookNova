@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - BookNova</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8B5E3C;
+            --secondary-color: #D2B48C;
+            --bg-color: #f8f4ef;
+            --text-color: #2c3e50;
+            --light-accent: #e6d5c3;
+            --dark-accent: #6d4c30;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background-color: #D2B48C !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: white !important;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--light-accent), var(--secondary-color));
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%238B5E3C" opacity="0.2"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>') no-repeat center center;
+            opacity: 0.2;
+        }
+        
+        .dashboard-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats-card {
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .stats-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #D2B48C;
+        }
+        
+        .stats-icon {
+            font-size: 2.5rem;
+            color: #D2B48C;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .action-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .action-btn {
+            background-color: #D2B48C !important;
+            color: white !important;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(210, 180, 140, 0.2);
+        }
+        
+        .action-btn:hover {
+            background-color: #c19a6b !important;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(210, 180, 140, 0.3);
+        }
+        
+        .search-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .search-input {
+            border: 2px solid var(--light-accent);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(139, 94, 60, 0.25);
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .custom-table th {
+            background-color: #f0e6da;
+            color: #8B5E3C;
+            font-weight: 600;
+            padding: 1rem;
+            text-align: left;
+        }
+        
+        /* Styles pour les badges de statut */
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-block;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .status-en-cours {
+            background-color: rgba(23, 162, 184, 0.15);
+            color: #17a2b8;
+            border: 1px solid rgba(23, 162, 184, 0.3);
+        }
+        
+        .status-retard {
+            background-color: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .status-termine {
+            background-color: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        /* Amélioration style avatar */
+        .avatar-circle {
+            width: 40px !important;
+            height: 40px !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: white !important;
+            background: linear-gradient(135deg, #8B5E3C, #D2B48C) !important;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+        }
+        
+        /* Indicateur de chargement */
+        .loading-spinner {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: var(--primary-color);
+        }
+        
+        .custom-table th:first-child {
+            border-top-left-radius: 10px;
+        }
+        
+        .custom-table th:last-child {
+            border-top-right-radius: 10px;
+        }
+        
+        .custom-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+        
+        .custom-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .custom-table tr:hover {
+            background-color: rgba(210, 180, 140, 0.1);
+        }
+        
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        
+        .status-en-cours {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: var(--success);
+        }
+        
+        .status-termine {
+            background-color: rgba(108, 117, 125, 0.2);
+            color: #6c757d;
+        }
+        
+        .status-retard {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: var(--danger);
+        }
+        
+        .action-icon {
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            margin-right: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .view-icon {
+            background-color: var(--info);
+        }
+        
+        .check-icon {
+            background-color: var(--success);
+        }
+        
+        .action-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .pagination .page-link {
+            color: var(--primary-color);
+            border-color: var(--light-accent);
+            margin: 0 3px;
+            border-radius: 5px;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #D2B48C;
+            border-color: #D2B48C;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: var(--light-accent);
+            color: var(--primary-color);
+        }
+        
+        footer {
+            background-color: #D2B48C !important;
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+        
+        .footer-text {
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        .chart-container {
+            height: 250px;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 1.5rem;
+            }
+            
+            .stats-card {
+                margin-bottom: 1rem;
+            }
+            
+            .action-btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard' %}" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; letter-spacing: 3px; color: #fff; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">
+                <span style="color: #8B5E3C; font-weight: bold;">BOOKNOVA</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'livres_admin' %}"><i class="fas fa-book me-2"></i>Gérer les livres</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'emprunts_en_cours' %}"><i class="fas fa-exchange-alt me-2"></i>Gérer les emprunts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'gerer_reservations' %}"><i class="fas fa-bookmark me-2"></i>Gérer les réservations</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-2"></i>{{ bibliothecaire.prenom }} {{ bibliothecaire.nom }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'deconnexion' %}"><i class="fas fa-sign-out-alt me-2"></i>Déconnexion</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    {% block content %}
+    <div class="container py-5">
+        <!-- En-tête du tableau de bord -->
+        <div class="dashboard-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="dashboard-title">Tableau de bord</h1>
+                    <p class="mb-0">Bienvenue, {{ bibliothecaire.prenom }} {{ bibliothecaire.nom }}. Voici un aperçu de votre bibliothèque.</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <div class="d-flex justify-content-md-end">
+                        <a href="{% url 'exporter_dashboard_pdf' %}" class="btn action-btn me-2">
+                            <i class="fas fa-file-export me-2"></i>Exporter
+                        </a>
+                        <button class="btn action-btn" onclick="window.location.reload();">
+                            <i class="fas fa-sync-alt me-2"></i>Actualiser
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cartes statistiques -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <a href="{% url 'livres_admin' %}" style="text-decoration: none; color: inherit;">
+                    <div class="stats-card">
+                        <i class="fas fa-book stats-icon"></i>
+                        <div class="stats-number">{{ total_livres }}</div>
+                        <div class="stats-label">Livres au total</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'emprunts_en_cours' %}" style="text-decoration: none; color: inherit;">
+                    <div class="stats-card">
+                        <i class="fas fa-users stats-icon"></i>
+                        <div class="stats-number">{{ total_emprunts }}</div>
+                        <div class="stats-label">Total des emprunts</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="{% url 'emprunts_en_retard' %}" style="text-decoration: none; color: inherit;">
+                    <div class="stats-card">
+                        <i class="fas fa-clock stats-icon"></i>
+                        <div class="stats-number">{{ total_retard }}</div>
+                        <div class="stats-label">En retard</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <i class="fas fa-chart-line stats-icon"></i>
+                    <div class="stats-number">{{ taux_rotation }}%</div>
+                    <div class="stats-label">Taux d'utilisation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Répartition des livres par catégorie -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="action-card h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="h5 mb-0">Répartition par catégorie</h2>
+                    </div>
+                    <div class="chart-container" style="height: 320px; position: relative;">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="action-card h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="h5 mb-0">Répartition des exemplaires</h2>
+                    </div>
+                    <div class="chart-container" style="height: 320px; position: relative;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions rapides -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="action-card">
+                    <h2 class="h5 mb-4">Actions rapides</h2>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a href="{% url 'ajouter_livre' %}" class="btn action-btn w-100 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-plus me-2"></i>Ajouter un livre
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'ajouter_emprunt' %}" class="btn action-btn w-100 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-book-reader me-2"></i>Nouvel emprunt
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'ajouter_lecteur' %}" class="btn action-btn w-100 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-user-plus me-2"></i>Nouveau lecteur
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'ajouter_bibliothecaire' %}" class="btn action-btn w-100 d-flex align-items-center justify-content-center">
+                                <i class="fas fa-user-tie me-2"></i>Ajouter bibliothécaire
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recherche et filtres -->
+        <div class="search-container" id="search-section">
+            <form method="GET" action="{% url 'dashboard' %}#search-section" id="search-form">
+                <div class="row">
+                    <div class="col-md-8 mb-3 mb-md-0">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
+                            <input type="text" name="recherche" id="recherche-input" class="form-control search-input" placeholder="Rechercher par nom de lecteur..." value="{{ recherche }}" autocomplete="off">
+                            <button type="submit" class="btn action-btn">Rechercher</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="statut" id="statut-select" class="form-select search-input">
+                            <option value="" {% if not statut %}selected{% endif %}>Filtrer par statut</option>
+                            <option value="En cours" {% if statut == 'En cours' %}selected{% endif %}>En cours</option>
+                            <option value="En retard" {% if statut == 'En retard' %}selected{% endif %}>En retard</option>
+                            <option value="Terminé" {% if statut == 'Terminé' %}selected{% endif %}>Complété</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="hidden" name="keep_position" value="true">
+            </form>
+        </div>
+
+        <!-- Tableau des derniers emprunts -->
+        <div class="table-container position-relative">
+            <!-- Indicateur de chargement -->
+            <div class="loading-spinner" id="loading-spinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h5 mb-0">Derniers emprunts</h2>
+                <a href="#" class="btn btn-outline-primary btn-sm">Voir tous les emprunts</a>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Lecteur</th>
+                            <th>Livre</th>
+                            <th>Date d'emprunt</th>
+                            <th>Date de retour</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for emprunt in derniers_emprunts %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle me-2">
+                                    {{ emprunt.lecteur.prenom|first }}{{ emprunt.lecteur.nom|first }}
+                                </div>
+                                <div>
+                                    <span class="fw-semibold">{{ emprunt.lecteur.prenom }} {{ emprunt.lecteur.nom }}</span>
+                                    <small class="d-block text-muted"><i class="fas fa-envelope-open me-1"></i>{{ emprunt.lecteur.email }}</small>
+                                </div>
+                                </div>
+                            </td>
+                            <td>{{ emprunt.livre.titre_livre }}</td>
+                            <td>{{ emprunt.date_emprunt|date:'d/m/Y' }}</td>
+                            <td>{% if emprunt.date_retour %}{{ emprunt.date_retour|date:'d/m/Y' }}{% else %}-{% endif %}</td>
+                            <td>
+                                {% if emprunt.est_en_retard %}
+                                    <span class="status-badge status-retard">En retard</span>
+                                {% elif emprunt.date_retour %}
+                                    <span class="status-badge status-termine">Complété</span>
+                                {% else %}
+                                    <span class="status-badge status-en-cours">En cours</span>
+                                {% endif %}
+                            </td>
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <i class="fas fa-info-circle me-2 text-muted"></i>Aucun emprunt récent.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <div class="text-muted">
+                        Affichage de {{ derniers_emprunts.start_index }}-{{ derniers_emprunts.end_index }} sur {{ derniers_emprunts.paginator.count }} emprunts
+                    </div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination mb-0">
+                            {% if derniers_emprunts.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ derniers_emprunts.previous_page_number }}{% if recherche %}&recherche={{ recherche }}{% endif %}{% if statut %}&statut={{ statut }}{% endif %}" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true"><i class="fas fa-chevron-left"></i></a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for i in derniers_emprunts.paginator.page_range %}
+                                {% if derniers_emprunts.number == i %}
+                                    <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                                {% elif i > derniers_emprunts.number|add:'-3' and i < derniers_emprunts.number|add:'3' %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}{% if recherche %}&recherche={{ recherche }}{% endif %}{% if statut %}&statut={{ statut }}{% endif %}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if derniers_emprunts.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ derniers_emprunts.next_page_number }}{% if recherche %}&recherche={{ recherche }}{% endif %}{% if statut %}&statut={{ statut }}{% endif %}"><i class="fas fa-chevron-right"></i></a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" aria-disabled="true"><i class="fas fa-chevron-right"></i></a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tableau des derniers avis -->
+        <div class="table-container position-relative mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h5 mb-0">Avis récents des lecteurs</h2>
+                <a href="#" class="btn btn-outline-primary btn-sm">Voir tous les avis</a>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Lecteur</th>
+                            <th>Livre</th>
+                            <th>Note</th>
+                            <th>Commentaire</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for avis in derniers_avis %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle me-2">
+                                    {{ avis.lecteur.prenom|first }}{{ avis.lecteur.nom|first }}
+                                </div>
+                                <div>
+                                    <span class="fw-semibold">{{ avis.lecteur.prenom }} {{ avis.lecteur.nom }}</span>
+                                    <small class="d-block text-muted"><i class="fas fa-envelope-open me-1"></i>{{ avis.lecteur.email }}</small>
+                                </div>
+                                </div>
+                            </td>
+                            <td>{{ avis.livre.titre_livre }}</td>
+                            <td>
+                                <div class="text-warning">
+                                    {% for i in '12345' %}
+                                        {% if forloop.counter <= avis.note %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td>
+                                {% if avis.commentaire|length > 50 %}
+                                    {{ avis.commentaire|slice:':50' }}...
+                                {% else %}
+                                    {{ avis.commentaire }}
+                                {% endif %}
+                            </td>
+                            <td>{{ avis.date_creation|date:'d/m/Y' }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <i class="fas fa-info-circle me-2 text-muted"></i>Aucun avis récent.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="text-center footer-text">&copy; 2025 BookNova - Tous droits réservés</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialisation du graphique d'activité
+        document.addEventListener('DOMContentLoaded', function() {
+            // Graphique des catégories
+            const ctxCategory = document.getElementById('categoryChart').getContext('2d');
+            const categoriesData = JSON.parse('{{ categories_json|safe }}');
+            const categoriesCounts = JSON.parse('{{ categories_counts_json|safe }}');
+            
+            const categoryChart = new Chart(ctxCategory, {
+                type: 'doughnut',
+                data: {
+                    labels: categoriesData,
+                    datasets: [{
+                        label: 'Catégorie de livres',
+                        data: categoriesCounts,
+                        backgroundColor: [
+                            '#D2B48C', 
+                            '#A67C52', 
+                            '#C19A6B', 
+                            '#E6D5C3', 
+                            '#6D4C30',
+                            '#8B5E3C'
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: 'Montserrat',
+                                    size: 12
+                                },
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 15,
+                                boxWidth: 10
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#8B5E3C',
+                            bodyColor: '#333',
+                            bodyFont: {
+                                family: 'Montserrat'
+                            },
+                            borderColor: '#D2B48C',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.parsed}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Graphique de répartition des exemplaires
+            const ctxStatus = document.getElementById('statusChart').getContext('2d');
+            const pourcentageDisponibles = JSON.parse('{{ pourcentage_disponibles_json|safe }}');
+            const pourcentageEmpruntes = JSON.parse('{{ pourcentage_empruntes_json|safe }}');
+            const pourcentageReserves = JSON.parse('{{ pourcentage_reserves_json|safe }}');
+            
+            const statusChart = new Chart(ctxStatus, {
+                type: 'bar',
+                data: {
+                    labels: ['Exemplaires disponibles', 'Exemplaires empruntés', 'Exemplaires réservés'],
+                    datasets: [{
+                        label: 'Pourcentage',
+                        data: [pourcentageDisponibles, pourcentageEmpruntes, pourcentageReserves],
+                        backgroundColor: [
+                            '#4CAF50', // Vert différent
+                            '#3F51B5', // Bleu indigo
+                            '#FF9800'  // Orange
+                        ],
+                        borderWidth: 2,
+                        borderColor: [
+                            'rgba(76, 175, 80, 0.7)',
+                            'rgba(63, 81, 181, 0.7)',
+                            'rgba(255, 152, 0, 0.7)'
+                        ],
+                        borderRadius: 10,
+                        maxBarThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y', // Barres horizontales
+                    scales: {
+                        x: {
+                            min: 0,
+                            max: 100,
+                            beginAtZero: true,
+                            suggestedMin: 0,
+                            ticks: {
+                                font: {
+                                    family: 'Montserrat',
+                                    size: 12
+                                },
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Montserrat',
+                                    weight: 'bold',
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(33, 33, 33, 0.95)',
+                            titleColor: '#FFF',
+                            bodyColor: '#FFF',
+                            bodyFont: {
+                                family: 'Montserrat',
+                                weight: 'bold'
+                            },
+                            displayColors: false,
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.x}% du total`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Style pour les avatars
+            document.querySelectorAll('.avatar-circle').forEach(avatar => {
+                avatar.style.width = '35px';
+                avatar.style.height = '35px';
+                avatar.style.borderRadius = '50%';
+                avatar.style.display = 'flex';
+                avatar.style.alignItems = 'center';
+                avatar.style.justifyContent = 'center';
+                avatar.style.fontWeight = 'bold';
+                avatar.style.backgroundColor = '#8B5E3C';
+            });
+        });
+    </script>
+    
+    <!-- Script pour la recherche en temps réel -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const rechercheInput = document.getElementById('recherche-input');
+            const statutSelect = document.getElementById('statut-select');
+            const tableBody = document.querySelector('.custom-table tbody');
+            const paginationContainer = document.querySelector('nav[aria-label="Page navigation"]');
+            const infoAffichage = document.querySelector('.text-muted');
+            let typingTimer;
+            const doneTypingInterval = 300; // Délai en ms après la dernière frappe
+            
+            // Fonction pour mettre à jour les résultats
+            function updateResults() {
+                const recherche = rechercheInput.value.trim();
+                const statut = statutSelect.value;
+                const loadingSpinner = document.getElementById('loading-spinner');
+                
+                // Afficher le spinner de chargement
+                loadingSpinner.style.display = 'flex';
+                
+                // Créer l'URL avec les paramètres
+                const url = new URL(window.location.href.split('#')[0]);
+                if (recherche) url.searchParams.set('recherche', recherche);
+                else url.searchParams.delete('recherche');
+                
+                if (statut) url.searchParams.set('statut', statut);
+                else url.searchParams.delete('statut');
+                
+                url.searchParams.set('ajax', 'true');
+                url.searchParams.set('keep_position', 'true');
+                
+                // Faire la requête AJAX
+                fetch(url.toString())
+                    .then(response => response.text())
+                    .then(html => {
+                        // Créer un DOM temporaire pour parser la réponse HTML
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        
+                        // Extraire le contenu de la table et mettre à jour
+                        const newTableBody = doc.querySelector('.custom-table tbody');
+                        if (newTableBody) {
+                            tableBody.innerHTML = newTableBody.innerHTML;
+                        }
+                        
+                        // Mettre à jour la pagination
+                        const newPagination = doc.querySelector('nav[aria-label="Page navigation"]');
+                        if (newPagination && paginationContainer) {
+                            paginationContainer.innerHTML = newPagination.innerHTML;
+                        }
+                        
+                        // Mettre à jour le texte d'information d'affichage
+                        const newInfoAffichage = doc.querySelector('.text-muted');
+                        if (newInfoAffichage && infoAffichage) {
+                            infoAffichage.innerHTML = newInfoAffichage.innerHTML;
+                        }
+                        
+                        // Masquer le spinner une fois les résultats chargés
+                        loadingSpinner.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la mise à jour des résultats:', error);
+                        // Masquer le spinner en cas d'erreur également
+                        loadingSpinner.style.display = 'none';
+                    });
+            }
+            
+            // Événement sur la saisie dans le champ de recherche
+            rechercheInput.addEventListener('input', function() {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(updateResults, doneTypingInterval);
+            });
+            
+            // Événement sur le changement de statut
+            statutSelect.addEventListener('change', updateResults);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+{% extends 'library/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header bg-gradient text-white p-4" style="background-color: #8B5E3C;">
+                    <h2 class="text-center mb-0" style="font-family: 'Playfair Display', serif; color: white; font-weight: bold;">Mes Emprunts</h2>
+                </div>
+                <div class="card-body p-4">
+                    {% if emprunts %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Livre</th>
+                                    <th>Date d'emprunt</th>
+                                    <th>Date de retour</th>
+                                    <th>Statut</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for emprunt in emprunts %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if emprunt.livre.image %}
+                                            <img src="{{ emprunt.livre.image.url }}" alt="{{ emprunt.livre.titre }}" class="me-2" style="width: 40px; height: 60px; object-fit: cover;">
+                                            {% else %}
+                                            <div class="me-2 bg-light text-center" style="width: 40px; height: 60px; line-height: 60px;">📚</div>
+                                            {% endif %}
+                                            <div>
+                                                <strong>{{ emprunt.livre.titre }}</strong>
+                                                <div class="text-muted small">{{ emprunt.livre.auteur }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">{{ emprunt.date_emprunt|date:"d/m/Y" }}</td>
+                                    <td class="align-middle">{{ emprunt.date_retour|date:"d/m/Y"|default:"Non retourné" }}</td>
+                                    <td class="align-middle">
+                                        {% if emprunt.est_en_retard %}
+                                        <span class="badge rounded-pill bg-danger">En retard</span>
+                                        {% elif emprunt.date_retour %}
+                                        <span class="badge rounded-pill bg-success">Retourné</span>
+                                        {% else %}
+                                        <span class="badge rounded-pill bg-warning">En cours</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        {% if emprunt.id and not emprunt.date_retour %}
+                                        <a href="{% url 'retourner_livre' emprunt.id %}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-undo"></i> Retourner
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'catalogue' %}" class="btn btn-primary">
+                            <i class="fas fa-book"></i> Emprunter un nouveau livre
+                        </a>
+                        <div class="text-muted">
+                            <small>Total: {{ emprunts|length }} emprunt(s)</small>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <div class="mb-4">
+                            <i class="fas fa-book" style="font-size: 3rem; color: #8B5E3C;"></i>
+                        </div>
+                        <p class="lead text-muted mb-4">Vous n'avez aucun emprunt en cours.</p>
+                        <a href="{% url 'catalogue' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus-circle"></i> Emprunter un livre
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

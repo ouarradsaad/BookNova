@@ -1,0 +1,348 @@
+{% extends 'library/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        background: #f8f4ef !important;
+        min-height: 100vh;
+    }
+    .about-bg-gradient {
+        background: #f8f4ef;
+        min-height: 100vh;
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+</style>
+<div class="about-bg-gradient">
+<div class="container py-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <h1 class="display-4 fw-bold mb-3" style="color: #8d6e3f;">À propos de BookNova</h1>
+            <p class="lead">BookNova est une plateforme moderne de gestion de bibliothèque conçue pour simplifier la vie des bibliothécaires et des lecteurs. Notre mission est de rendre la gestion, l’emprunt et la découverte de livres plus intuitifs, rapides et agréables.</p>
+            <ul class="list-unstyled mt-4 mb-4">
+                <li><i class="fas fa-check-circle text-success me-2"></i> Gestion intelligente des emprunts et retours</li>
+                <li><i class="fas fa-check-circle text-success me-2"></i> Statistiques en temps réel</li>
+                <li><i class="fas fa-check-circle text-success me-2"></i> Interface conviviale et responsive</li>
+                <li><i class="fas fa-check-circle text-success me-2"></i> Sécurité et confidentialité des données</li>
+            </ul>
+        </div>
+        <div class="col-md-6 text-center">
+            <img src="{% static 'library/images/propos1.jpg' %}" alt="Bibliothèque moderne" class="img-fluid rounded shadow-lg" style="max-height: 350px;">
+        </div>
+    </div>
+    <div class="row align-items-center mb-5 flex-md-row-reverse">
+        <div class="col-md-6">
+            <h2 class="fw-bold mb-3" style="color: #8d6e3f;">Notre équipe</h2>
+            <p>Notre équipe est composée de bibliothécaires expérimentés et de développeurs passionnés. Ensemble, nous allions la connaissance du monde des bibliothèques à la puissance des technologies modernes, pour créer des solutions innovantes qui répondent aux besoins des lecteurs et des professionnels de la lecture.</p>
+            <div class="d-flex align-items-center mt-4">
+                <div class="col-auto p-0">
+                    <img src="{% static 'library/images/saad4.jpg' %}" alt="Saad Ouarrad" class="rounded-circle shadow" width="120" height="120" style="object-fit: cover; border: 4px solid #fff;">
+                </div>
+                <div class="ms-3">
+                    <h5 class="mb-0">Saad Ouarrad</h5>
+                    <small class="text-muted">Développeur</small>
+                </div>
+            </div>
+            <div class="d-flex align-items-center mt-4">
+                <div class="col-auto p-0">
+                    <img src="{% static 'library/images/oualid1.jpg' %}" alt="Oualid El Karmany" class="rounded-circle shadow" width="120" height="120" style="object-fit: cover; border: 4px solid #fff;">
+                </div>
+                <div class="ms-3">
+                    <h5 class="mb-0">Oualid El Karmany</h5>
+                    <small class="text-muted">Développeur</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-center">
+            <img src="{% static 'library/images/equipe.png' %}" alt="Équipe BookNova" class="img-fluid rounded shadow-lg" style="max-height: 350px;">
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-12 text-center schema-section" style="position:relative;">
+            <h2 class="fw-bold mb-3 schema-title" style="color: #8d6e3f; position:relative; z-index:2;">Pourquoi choisir BookNova ?</h2>
+            <!-- SVG ORGANIGRAMME ARROWS avec trait vertical sous le titre -->
+            <svg class="schema-arrows d-none d-md-block" width="100%" height="180" style="position:absolute; left:0; top:48px; pointer-events:none; z-index:1;" viewBox="0 0 900 180">
+                <!-- Trait vertical sous le titre -->
+                <line x1="450" y1="0" x2="450" y2="60" stroke="#8d6e3f" stroke-width="4" />
+                <!-- Flèche gauche (Simplicité) -->
+                <line x1="450" y1="60" x2="180" y2="120" stroke="#8d6e3f" stroke-width="4" marker-end="url(#arrowhead)" />
+                <!-- Flèche milieu (Performance) -->
+                <line x1="450" y1="60" x2="450" y2="120" stroke="#8d6e3f" stroke-width="4" marker-end="url(#arrowhead)" />
+                <!-- Flèche droite (Support) -->
+                <line x1="450" y1="60" x2="810" y2="120" stroke="#8d6e3f" stroke-width="4" marker-end="url(#arrowhead)" />
+                <defs>
+                  <marker id="arrowhead" markerWidth="12" markerHeight="12" refX="8" refY="6" orient="auto">
+                    <polygon points="0 2, 8 6, 0 10" fill="#8d6e3f"/>
+                  </marker>
+                </defs>
+            </svg>
+            <div class="row justify-content-center mt-5" style="margin-top: 120px !important;">
+                <div class="col-md-4 mb-4">
+                    <div class="schema-card p-3 h-100">
+                        <img src="{% static 'library/images/simplicite.png' %}" alt="Simplicité" class="img-fluid rounded mb-3 shadow">
+                        <h5 class="fw-bold">Simplicité</h5>
+                        <p>Une interface claire et intuitive pour tous les utilisateurs.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="schema-card p-3 h-100">
+                        <img src="{% static 'library/images/performant.png' %}" alt="Performance" class="img-fluid rounded mb-3 shadow">
+                        <h5 class="fw-bold">Performance</h5>
+                        <p>Des fonctionnalités puissantes pour gérer la bibliothèque efficacement.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="schema-card p-3 h-100">
+                        <img src="{% static 'library/images/support.png' %}" alt="Support" class="img-fluid rounded mb-3 shadow">
+                        <h5 class="fw-bold">Support</h5>
+                        <p>Une équipe à l’écoute pour vous accompagner à chaque étape.</p>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .schema-section { min-height: 320px; }
+                .schema-title { font-size: 2.2rem; }
+                .schema-arrows { max-width: 900px; margin: 0 auto; display: block; }
+                .schema-card { background: #fffdf7; border-radius: 1rem; box-shadow: 0 4px 18px rgba(141,110,63,0.08); transition: box-shadow .2s, transform .2s; }
+                .schema-card:hover { box-shadow: 0 8px 32px rgba(141,110,63,0.16); transform: translateY(-7px) scale(1.03); }
+                @media (max-width: 991px) {
+                    .schema-arrows { display:none; }
+                }
+            </style>
+        </div>
+    </div>
+    <!-- Bloc supplémentaire : Chiffres clés -->
+    <div class="row mt-5 mb-4">
+        <div class="col-md-12">
+            <h2 class="fw-bold mb-4" style="color: #8d6e3f;">Quelques chiffres clés</h2>
+            <div class="row text-center">
+                <div class="col-md-3 mb-3">
+                    <div class="display-5 fw-bold" style="color: #bfa76a;">5000+</div>
+                    <div class="text-muted">Livres référencés</div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="display-5 fw-bold" style="color: #bfa76a;">1200+</div>
+                    <div class="text-muted">Utilisateurs inscrits</div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="display-5 fw-bold" style="color: #bfa76a;">99%</div>
+                    <div class="text-muted">Taux de satisfaction</div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="display-5 fw-bold" style="color: #bfa76a;">24/7</div>
+                    <div class="text-muted">Support disponible</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bloc supplémentaire : FAQ -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h2 class="fw-bold mb-4" style="color: #8d6e3f;">Foire aux questions (FAQ)</h2>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq1">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                            Comment puis-je emprunter un livre ?
+                        </button>
+                    </h2>
+                    <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Pour emprunter un livre, connectez-vous à votre compte BookNova, recherchez le livre souhaité dans le catalogue, puis cliquez sur le bouton « Emprunter ». Rendez-vous à la bibliothèque pour récupérer votre ouvrage ou suivez les instructions pour l’emprunt numérique si disponible.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                            Puis-je réserver un livre déjà emprunté ?
+                        </button>
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Oui, il est possible de réserver un livre déjà emprunté par un autre utilisateur. Une fois le livre retourné, vous recevrez une notification par email ou via votre espace personnel pour venir le récupérer.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                            Comment contacter l’équipe BookNova ?
+                        </button>
+                    </h2>
+                    <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Vous pouvez nous contacter via le <a href="{% url 'contact' %}">formulaire de contact</a> du site, ou par email à l’adresse contact@booknova.fr. Notre équipe vous répondra dans les plus brefs délais.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bloc supplémentaire : Notre vision -->
+    <div class="row mb-5">
+        <div class="col-md-12 text-center">
+            <h2 class="fw-bold mb-4" style="color: #8d6e3f;">Notre vision pour l'avenir</h2>
+            <p class="lead">BookNova ambitionne de devenir la référence des bibliothèques connectées, en intégrant à terme&nbsp;:</p>
+            <ul class="list-unstyled d-inline-block text-start mx-auto" style="max-width: 520px;">
+                <li><i class="fas fa-star text-warning me-2"></i> Des recommandations personnalisées grâce à l’IA</li>
+                <li><i class="fas fa-mobile-alt text-primary me-2"></i> Une application mobile dédiée</li>
+                <li><i class="fas fa-globe text-success me-2"></i> L’accès à des livres numériques et audio</li>
+                <li><i class="fas fa-users text-info me-2"></i> Une communauté interactive pour partager ses lectures</li>
+                <li><i class="fas fa-chart-line text-danger me-2"></i> De nouveaux outils statistiques pour les bibliothécaires</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Bloc supplémentaire : Témoignages -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h2 class="fw-bold mb-4" style="color: #8d6e3f;">Ils parlent de nous</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>« BookNova a révolutionné la gestion de notre bibliothèque. L’interface est claire et le support très réactif. »</p>
+                                <footer class="blockquote-footer mt-2">Bibliothèque municipale de Lyon</footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>« J’ai pu réserver et emprunter mes livres préférés en quelques clics, même depuis mon téléphone ! »</p>
+                                <footer class="blockquote-footer mt-2">Marie, lectrice</footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>« Enfin une solution qui pense aussi aux besoins des bibliothécaires ! »</p>
+                                <footer class="blockquote-footer mt-2">M. Lefevre, bibliothécaire</footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bloc supplémentaire : Historique de BookNova -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h2 class="fw-bold mb-4" style="color: #8d6e3f;">Notre histoire</h2>
+            <div class="timeline mx-auto" style="max-width: 800px;">
+                <div class="timeline-item mb-4">
+                    <div class="timeline-date fw-bold text-gold">2022</div>
+                    <div class="timeline-content">Lancement du projet BookNova par Saad Ouarrad, avec l’objectif de moderniser la gestion des bibliothèques scolaires et municipales.</div>
+                </div>
+                <div class="timeline-item mb-4">
+                    <div class="timeline-date fw-bold text-gold">2023</div>
+                    <div class="timeline-content">Premières bibliothèques partenaires, développement de la version mobile et intégration de la gestion des réservations.</div>
+                </div>
+                <div class="timeline-item mb-4">
+                    <div class="timeline-date fw-bold text-gold">2024</div>
+                    <div class="timeline-content">Ajout de la recherche intelligente, notifications et statistiques avancées. Plus de 1000 utilisateurs actifs.</div>
+                </div>
+                <div class="timeline-item mb-4">
+                    <div class="timeline-date fw-bold text-gold">2025</div>
+                    <div class="timeline-content">Déploiement national, nouveaux modules collaboratifs et communauté BookNova en pleine croissance.</div>
+                </div>
+            </div>
+            <style>
+                .timeline { border-left: 3px solid #bfa76a; padding-left: 2rem; position: relative; }
+                .timeline-item { position: relative; }
+                .timeline-date { color: #bfa76a; font-size: 1.2rem; margin-bottom: 0.2rem; }
+                .timeline-content { background: #fffdf7; border-radius: 0.6rem; box-shadow: 0 2px 10px #bfa76a22; padding: 1rem 1.2rem; margin-bottom: 0.5rem; }
+                .timeline-item:before { content: ''; position: absolute; left: -2.25rem; top: 0.7rem; width: 1.1rem; height: 1.1rem; background: #bfa76a; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px #bfa76a44; }
+            </style>
+        </div>
+    </div>
+    <!-- Bloc supplémentaire : Nos partenaires -->
+    
+    <!-- Style personnalisé pour les accordions FAQ -->
+<style>
+    .accordion-button:not(.collapsed) {
+        color: #8d6e3f;
+        background-color: rgba(141, 110, 63, 0.1);
+        box-shadow: inset 0 -1px 0 rgba(141, 110, 63, 0.2);
+    }
+    
+    .accordion-button:focus {
+        border-color: rgba(141, 110, 63, 0.5);
+        box-shadow: 0 0 0 0.25rem rgba(141, 110, 63, 0.25);
+    }
+    
+    .accordion-button::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%238d6e3f'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    }
+    
+    .accordion-button:not(.collapsed)::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%238d6e3f'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    }
+</style>
+
+<!-- Bloc supplémentaire : Nos engagements -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h2 class="fw-bold mb-4" style="color: #8d6e3f;">Nos engagements</h2>
+            <ul class="list-unstyled mx-auto" style="max-width: 600px;">
+                <li class="mb-3"><i class="fas fa-leaf text-success me-2"></i> Démarche éco-responsable : serveurs verts, réduction de l’empreinte carbone, dématérialisation des documents.</li>
+                <li class="mb-3"><i class="fas fa-universal-access text-primary me-2"></i> Accessibilité numérique : site adapté aux personnes en situation de handicap.</li>
+                <li class="mb-3"><i class="fas fa-lock text-warning me-2"></i> Confidentialité : respect du RGPD et sécurisation des données de tous les utilisateurs.</li>
+                <li class="mb-3"><i class="fas fa-hands-helping text-info me-2"></i> Soutien à la lecture : partenariats avec des associations pour promouvoir la lecture auprès des jeunes et des publics éloignés.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Footer amélioré -->
+<footer class="py-5" style="background-color: #D2B48C;">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <h5 class="fw-bold mb-3">BookNova</h5>
+                <p class="text-dark mb-0">Votre bibliothèque en ligne moderne et accessible. Découvrez, lisez et partagez vos lectures préférées dans un environnement chaleureux et convivial.</p>
+            </div>
+            <div class="col-md-4">
+                <h5 class="fw-bold mb-3">Liens rapides</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{% url 'catalogue' %}" class="text-dark text-decoration-none">📚 Catalogue</a></li>
+                    <li class="mb-2"><a href="{% url 'a_propos' %}" class="text-dark text-decoration-none">ℹ️ À propos</a></li>
+                    <li class="mb-2"><a href="{% url 'contact' %}" class="text-dark text-decoration-none">📞 Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 class="fw-bold mb-3">Horaires d'ouverture</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">📅 Lundi - Vendredi: 9h - 18h</li>
+                    <li class="mb-2">📅 Samedi: 10h - 16h</li>
+                    <li class="mb-2">📅 Dimanche: Fermé</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col text-center">
+                <div class="social-links">
+                    <a href="https://www.bing.com/images/search?q=partenaire%20Ville%20de%20Lyon&qs=n&form=QBIR&sp=-1&lq=0&pq=partenaire%20ville%20de%20lyon&sc=10-24&cvid=AED2303C98B24B6DB0E3E66439495B1A&first=1" class="text-dark me-4 text-decoration-none"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="#" class="text-dark me-4 text-decoration-none"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" class="text-dark me-4 text-decoration-none"><i class="fab fa-instagram fa-lg"></i></a>
+                </div>
+                <p class="mt-3 mb-0 text-dark">&copy; 2025 BookNova. Tous droits réservés.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<style>
+    .social-links a {
+        transition: opacity 0.3s ease;
+    }
+    .social-links a:hover {
+        opacity: 0.8;
+    }
+</style>
+<!-- Fin de page -->
+{% endblock %}

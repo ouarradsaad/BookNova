@@ -1,0 +1,418 @@
+{% extends 'library/Dashboard.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        background-color: #f8f4ef !important;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+    .page-header {
+        background: linear-gradient(120deg, #8B5E3C, #D2B48C);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(139, 94, 60, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    .page-header::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff" opacity="0.05"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg>') no-repeat right -40px top -40px;
+        background-size: 180px 180px;
+        opacity: 0.15;
+        mix-blend-mode: overlay;
+    }
+    .filter-bar {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+    .search-input {
+        border: 2px solid #e6d5c3;
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        transition: all 0.3s ease;
+    }
+    .search-input:focus {
+        border-color: #8B5E3C;
+        box-shadow: 0 0 0 0.25rem rgba(139, 94, 60, 0.25);
+    }
+    .custom-table {
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 8px 40px rgba(44, 62, 80, 0.10), 0 4px 24px rgba(210, 180, 140, 0.2);
+        background-color: white;
+    }
+    .custom-table thead {
+        background-color: #8B5E3C;
+        color: #fff;
+        font-size: 1.15rem;
+        letter-spacing: 1.5px;
+        border-top-left-radius: 22px;
+        border-top-right-radius: 22px;
+    }
+    .custom-table th, .custom-table td {
+        vertical-align: middle !important;
+        padding: 1.15rem 1.1rem;
+        border: none;
+        font-size: 1.08rem;
+    }
+    .custom-table tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .custom-table tbody tr:last-child {
+        border-bottom: none;
+    }
+    .custom-table tbody tr:hover {
+        background-color: #fffbf4;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(139, 94, 60, 0.05);
+    }
+    .custom-table .isbn-cell {
+        font-family: 'Fira Mono', 'Consolas', monospace;
+        font-size: 0.95em;
+        color: #8B5E3C;
+        background: #f8f4ef;
+        border-radius: 8px;
+        padding: 0.25em 0.7em;
+    }
+    .badge-categorie {
+        background-color: #d2b48c;
+        color: #fff;
+        border-radius: 12px;
+        padding: 0.3em 0.9em;
+        font-size: 0.98em;
+        font-weight: 600;
+        letter-spacing: 1px;
+        box-shadow: 0 2px 6px rgba(139, 94, 60, 0.09);
+    }
+    .book-title {
+        font-weight: bold;
+        color: #333;
+    }
+    .book-author {
+        color: #6c757d;
+        font-style: italic;
+    }
+    .action-btn {
+        border-radius: 8px;
+        font-size: 0.85rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .edit-btn {
+        background-color: #D2B48C;
+        color: white;
+    }
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+    }
+    .add-btn {
+        background-color: #8B5E3C;
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(139, 94, 60, 0.2);
+        transition: all 0.3s ease;
+    }
+    .add-btn:hover {
+        background-color: #6d4c30;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(139, 94, 60, 0.3);
+    }
+    .pagination-custom .page-item .page-link {
+        color: #8B5E3C;
+        border: none;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        margin: 0 3px;
+    }
+    .pagination-custom .page-item.active .page-link {
+        background-color: #8B5E3C;
+        color: white;
+    }
+    @media (max-width: 768px) {
+        .custom-table th, .custom-table td {
+            font-size: 0.95rem;
+            padding: 0.5rem 0.4rem;
+        }
+    }
+</style>
+
+<div class="container py-5">
+
+    
+    <!-- Barre de filtre et recherche -->
+    <div class="filter-bar">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="fas fa-search text-muted"></i>
+                    </span>
+                    <input type="text" id="searchInput" class="form-control search-input border-start-0" placeholder="Rechercher un livre par titre, auteur ou ISBN...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select id="categorieFilter" class="form-select search-input">
+                    <option value="">Toutes les catégories</option>
+                    {% for categorie in categories_uniques %}
+                    <option value="{{ categorie }}">{{ categorie }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select id="disponibiliteFilter" class="form-select search-input">
+                    <option value="">Tous les livres</option>
+                    <option value="disponible">Disponibles</option>
+                    <option value="indisponible">Non disponibles</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tableau des livres -->
+    <div class="table-responsive">
+        <table class="custom-table table align-middle mb-4" id="livresTable">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">ID</th>
+                    <th style="width: 25%;">Livre</th>
+                    <th style="width: 15%;">Catégorie</th>
+                    <th style="width: 15%;">ISBN</th>
+                    <th style="width: 10%;">Exemplaires</th>
+                    <th style="width: 10%;">Prix</th>
+                    <th style="width: 20%;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for livre in livres %}
+                <tr data-livre-id="{{ livre.livre_id }}">
+                    <td>{{ livre.livre_id }}</td>
+                    <td>
+                        <div class="d-flex flex-column">
+                            <span class="book-title">{{ livre.titre_livre }}</span>
+                            <span class="book-author">{{ livre.auteur_livre }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        {% if livre.categorie_livre %}
+                            <span class="badge-categorie">{{ livre.categorie_livre }}</span>
+                        {% else %}
+                            <span class="badge-categorie" style="background: #ccc; color: #444;">Non classé</span>
+                        {% endif %}
+                    </td>
+                    <td class="isbn-cell">{{ livre.isbn }}</td>
+                    <td>
+                        {% if livre.nombre_exemplaires > 0 %}
+                            <span class="badge bg-success p-2 px-3">{{ livre.nombre_exemplaires }}</span>
+                        {% else %}
+                            <span class="badge bg-danger p-2 px-3">0</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="fw-bold">{{ livre.prix }} DH</span>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'modifier_livre' livre.livre_id %}" class="btn action-btn edit-btn btn-sm">
+                                <i class="fas fa-edit me-1"></i> Modifier
+                            </a>
+                            <a href="javascript:void(0)" onclick="confirmerSuppression({{ livre.livre_id }}, '{{ livre.titre_livre|escapejs }}')" class="btn action-btn delete-btn btn-sm">
+                                <i class="fas fa-trash me-1"></i> Supprimer
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center py-5">
+                    <img src="{% static 'library/images/no-data.svg' %}" alt="Aucun livre" style="height: 120px; opacity: 0.5;" class="mb-3">
+                    <h5 class="text-muted">Aucun livre trouvé.</h5>
+                    <p class="text-muted">Commencez par ajouter des livres à votre bibliothèque.</p>
+                    <a href="{% url 'ajouter_livre' %}" class="btn action-btn edit-btn mt-2">
+                        <i class="fas fa-plus me-2"></i>Ajouter un livre
+                    </a>
+                </td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    {% if livres.has_other_pages %}
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="text-muted">
+            Affichage de {{ livres.start_index }} à {{ livres.end_index }} sur {{ livres.paginator.count }} livres
+        </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-custom mb-0">
+                {% if livres.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="First">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ livres.previous_page_number }}" aria-label="Previous">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in livres.paginator.page_range %}
+                {% if livres.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > livres.number|add:'-3' and num < livres.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+                
+                {% if livres.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ livres.next_page_number }}" aria-label="Next">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ livres.paginator.num_pages }}" aria-label="Last">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Fonction pour créer et afficher une notification toast
+    function showToast(type, message) {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type === 'success' ? 'bg-success' : 'bg-danger'} text-white`;
+        toast.style.position = 'fixed';
+        toast.style.top = '20px';
+        toast.style.right = '20px';
+        toast.style.minWidth = '300px';
+        toast.style.zIndex = '9999';
+        toast.style.padding = '15px 20px';
+        toast.style.borderRadius = '8px';
+        toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        toast.style.opacity = '0';
+        toast.style.transition = 'all 0.3s ease';
+        
+        const icon = document.createElement('i');
+        icon.className = type === 'success' ? 'fas fa-check-circle me-2' : 'fas fa-exclamation-circle me-2';
+        
+        toast.appendChild(icon);
+        toast.appendChild(document.createTextNode(message));
+        document.body.appendChild(toast);
+        
+        // Animation d'apparition
+        setTimeout(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateY(10px)';
+        }, 10);
+        
+        // Disparition après 3 secondes
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 3000);
+    }
+    
+    // Fonction pour confirmer et effectuer la suppression d'un livre
+    function confirmerSuppression(livreId, titreLivre) {
+        // Demander confirmation à l'utilisateur
+        if (confirm(`Voulez-vous vraiment supprimer "${titreLivre}" ?`)) {
+            // Récupérer la ligne du livre à supprimer
+            const row = document.querySelector(`tr[data-livre-id="${livreId}"]`);
+            
+            // Animation de suppression
+            if (row) {
+                row.style.transition = 'all 0.5s ease';
+                row.style.backgroundColor = '#ffebee';
+                row.style.opacity = '0.5';
+            }
+            
+            // Redirection vers l'URL de suppression avec paramètre de retour
+            window.location.href = `{% url 'supprimer_livre' 9999 %}`.replace('9999', livreId) + '?redirect=livres_admin';
+        }
+        return false;
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Vérifier s'il y a un message de succès dans l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const successMessage = urlParams.get('success_message');
+        if (successMessage) {
+            showToast('success', decodeURIComponent(successMessage));
+            
+            // Nettoyer l'URL
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+        }
+        
+        // Recherche en temps réel
+        const searchInput = document.getElementById('searchInput');
+        const categorieFilter = document.getElementById('categorieFilter');
+        const disponibiliteFilter = document.getElementById('disponibiliteFilter');
+        const table = document.getElementById('livresTable');
+        const rows = table.querySelectorAll('tbody tr');
+        
+        const applyFilters = () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const categorie = categorieFilter.value.toLowerCase();
+            const disponibilite = disponibiliteFilter.value;
+            
+            rows.forEach(row => {
+                const titre = row.querySelector('.book-title').textContent.toLowerCase();
+                const auteur = row.querySelector('.book-author').textContent.toLowerCase();
+                const isbn = row.querySelector('.isbn-cell').textContent.toLowerCase();
+                const rowCategorie = row.querySelector('.badge-categorie').textContent.toLowerCase();
+                const exemplaireSpan = row.querySelectorAll('td')[4].querySelector('span');
+                const exemplaires = exemplaireSpan ? parseInt(exemplaireSpan.textContent) : 0;
+                
+                const matchRecherche = titre.includes(searchTerm) || auteur.includes(searchTerm) || isbn.includes(searchTerm);
+                const matchCategorie = categorie === '' || rowCategorie.includes(categorie);
+                let matchDisponibilite = true;
+                
+                if (disponibilite === 'disponible' && exemplaires <= 0) {
+                    matchDisponibilite = false;
+                } else if (disponibilite === 'indisponible' && exemplaires > 0) {
+                    matchDisponibilite = false;
+                }
+                
+                row.style.display = matchRecherche && matchCategorie && matchDisponibilite ? '' : 'none';
+            });
+        };
+        
+        searchInput.addEventListener('input', applyFilters);
+        categorieFilter.addEventListener('change', applyFilters);
+        disponibiliteFilter.addEventListener('change', applyFilters);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,369 @@
+{% extends "library/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        background: #f8f4ef !important;
+        min-height: 100vh;
+    }
+    .contact-section {
+        background: #f8f4ef;
+        min-height: 100vh;
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+    .contact-card {
+        background-color: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: visible;
+        margin-bottom: 30px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+    .contact-header {
+        background-color: #8B5E3C;
+        color: white;
+        padding: 65px 20px 25px 20px;
+        position: relative;
+        text-align: center;
+    }
+    .contact-header h2 {
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 0;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    .contact-body {
+        padding: 30px;
+    }
+    .contact-info {
+        background-color: #f9f5f0;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+    .contact-info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .contact-info-item:last-child {
+        margin-bottom: 0;
+    }
+    .contact-icon {
+        width: 50px;
+        height: 50px;
+        background-color: #8B5E3C;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: white;
+        font-size: 1.2rem;
+    }
+    .contact-text h5 {
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #8B5E3C;
+    }
+    .contact-text p {
+        margin-bottom: 0;
+        color: #666;
+    }
+    .form-control {
+        border: 2px solid #e6d5c3;
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #8B5E3C;
+        box-shadow: 0 0 0 0.25rem rgba(139, 94, 60, 0.25);
+    }
+    .form-label {
+        font-weight: 600;
+        color: #5d4037;
+        margin-bottom: 8px;
+    }
+    .btn-contact {
+        background-color: #8B5E3C;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 25px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+    .btn-contact:hover {
+        background-color: #6d4c30;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(139, 94, 60, 0.3);
+    }
+    .social-links {
+        display: flex;
+        justify-content: center;
+        margin-top: 25px;
+    }
+    .social-link {
+        width: 40px;
+        height: 40px;
+        background-color: #f0e6da;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 10px;
+        color: #8B5E3C;
+        transition: all 0.3s ease;
+    }
+    .social-link:hover {
+        background-color: #8B5E3C;
+        color: white;
+        transform: translateY(-3px);
+    }
+    .map-container {
+        height: 300px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .accordion-button:not(.collapsed) {
+        background-color: #f0e6da;
+        color: #8B5E3C;
+    }
+    .accordion-button:focus {
+        box-shadow: 0 0 0 0.25rem rgba(139, 94, 60, 0.25);
+    }
+    .success-message {
+        display: none;
+        background-color: #d4edda;
+        color: #155724;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    /* .logo {
+      width: 100px;
+      position: absolute;
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.8);
+    } */
+
+    .logo-container {
+        width: 110px;
+        height: 110px;
+        background-color: white;
+        border-radius: 50%;
+        position: absolute;
+        top: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.8);
+        z-index: 10;
+    }
+    .logo-container img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: contain;
+    }
+</style>
+
+<section class="contact-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="contact-card">
+                    <div class="contact-header">
+                        <div class="logo-container">
+                            <img src="{% static 'library/images/Logo.jpg' %}" alt="Logo BookNova">
+                        </div>
+                        <h2 class="mt-3">Contactez-nous</h2>
+                        <p class="mb-0">Nous sommes à votre écoute</p>
+                    </div>
+                    
+                    <div class="contact-body">
+                        <div class="row">
+                            <div class="col-lg-5 mb-4 mb-lg-0">
+                                <div class="contact-info">
+                                    <h4 class="mb-4" style="color: #8B5E3C; font-weight: 600;">Nos coordonnées</h4>
+                                    
+                                    <div class="contact-info-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div class="contact-text">
+                                            <h5>Adresse</h5>
+                                            <p>44 Pl. des Nations Unies, Casablanca 22000</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="contact-info-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div class="contact-text">
+                                            <h5>Téléphone</h5>
+                                            <p>+212 5 22 45 67 89</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="contact-info-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="contact-text">
+                                            <h5>Email</h5>
+                                            <p>contact@booknova.ma</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="contact-info-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="contact-text">
+                                            <h5>Horaires d'ouverture</h5>
+                                            <p>Lun-Ven: 9h-18h | Sam: 10h-16h | Dim: fermé</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="map-container">
+                                    <!-- Intégration Google Maps -->
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.8455115587883!2d-7.6192698!3d33.5950056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7d282e67e2a2b%3A0x4e9d8c7efbcf8d09!2sPlace%20des%20Nations%20Unies%2C%20Casablanca!5e0!3m2!1sfr!2sma!4v1651234567890!5m2!1sfr!2sma" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-7">
+                                <h4 class="mb-4" style="color: #8B5E3C; font-weight: 600;">Envoyez-nous un message</h4>
+                                
+                                <div id="successMessage" class="success-message">
+                                    <i class="fas fa-check-circle me-2"></i> Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.
+                                </div>
+                                
+                                <form id="contactForm" method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="nom" class="form-label">Nom complet</label>
+                                            <input type="text" class="form-control" id="nom" name="nom" placeholder="Votre nom" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="Votre email" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="sujet" class="form-label">Sujet</label>
+                                        <input type="text" class="form-control" id="sujet" name="sujet" placeholder="Sujet de votre message">
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label for="message" class="form-label">Message</label>
+                                        <textarea class="form-control" id="message" name="message" rows="5" placeholder="Votre message" required></textarea>
+                                    </div>
+                                    
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-contact">
+                                            <i class="fas fa-paper-plane me-2"></i> Envoyer le message
+                                        </button>
+                                    </div>
+                                </form>
+                                
+                                <div class="social-links">
+                                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                                
+                                <div class="accordion mt-4" id="faqContact">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faqContact1">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqContactCollapse1" aria-expanded="false" aria-controls="faqContactCollapse1">
+                                                Comment savoir si mon message a bien été envoyé ?
+                                            </button>
+                                        </h2>
+                                        <div id="faqContactCollapse1" class="accordion-collapse collapse" aria-labelledby="faqContact1" data-bs-parent="#faqContact">
+                                            <div class="accordion-body">
+                                                Après avoir cliqué sur « Envoyer », un message de confirmation s'affichera à l'écran. Si besoin, vérifiez vos emails pour une réponse de notre équipe.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faqContact2">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqContactCollapse2" aria-expanded="false" aria-controls="faqContactCollapse2">
+                                                Sous quel délai vais-je recevoir une réponse ?
+                                            </button>
+                                        </h2>
+                                        <div id="faqContactCollapse2" class="accordion-collapse collapse" aria-labelledby="faqContact2" data-bs-parent="#faqContact">
+                                            <div class="accordion-body">
+                                                Nous répondons généralement sous 24h ouvrées. En période de forte affluence, ce délai peut être légèrement allongé.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faqContact3">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqContactCollapse3" aria-expanded="false" aria-controls="faqContactCollapse3">
+                                                Comment puis-je réserver un livre ?
+                                            </button>
+                                        </h2>
+                                        <div id="faqContactCollapse3" class="accordion-collapse collapse" aria-labelledby="faqContact3" data-bs-parent="#faqContact">
+                                            <div class="accordion-body">
+                                                Pour réserver un livre, consultez notre catalogue en ligne et cliquez sur le bouton "Emprunter" à côté du livre qui vous intéresse. Vous devez être connecté à votre compte pour effectuer cette opération.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Animation du formulaire de contact
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Simuler l'envoi du formulaire
+        const submitButton = this.querySelector('button[type="submit"]');
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Envoi en cours...';
+        submitButton.disabled = true;
+        
+        // Simuler un délai d'envoi
+        setTimeout(function() {
+            document.getElementById('contactForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Réinitialiser le formulaire après 5 secondes
+            setTimeout(function() {
+                document.getElementById('contactForm').reset();
+                document.getElementById('contactForm').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+                submitButton.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Envoyer le message';
+                submitButton.disabled = false;
+            }, 5000);
+        }, 1500);
+    });
+</script>
+{% endblock %}

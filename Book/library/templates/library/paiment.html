@@ -1,0 +1,181 @@
+{% extends "library/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        background: #f8f4ef !important;
+        min-height: 100vh;
+    }
+    .payment-section {
+        background: linear-gradient(135deg, #f8f4ef 0%, #e6d5c3 100%);
+        min-height: 100vh;
+        padding: 60px 0;
+    }
+    .payment-card {
+        background-color: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 30px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .payment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+    .payment-header {
+        background-color: #8B5E3C;
+        color: white;
+        padding: 25px 20px;
+        position: relative;
+        text-align: center;
+    }
+    .payment-header h2 {
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 0;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    .payment-body {
+        padding: 30px;
+    }
+    .form-control {
+        border: 2px solid #e6d5c3;
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #8B5E3C;
+        box-shadow: 0 0 0 0.25rem rgba(139, 94, 60, 0.25);
+    }
+    .form-label {
+        font-weight: 600;
+        color: #5d4037;
+        margin-bottom: 8px;
+    }
+    .btn-payment {
+        background-color: #8B5E3C;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 25px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+    .btn-payment:hover {
+        background-color: #6d4c30;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(139, 94, 60, 0.3);
+    }
+    .accepted-cards {
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+    .accepted-cards h5 {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+    }
+    .card-icons {
+        display: flex;
+        gap: 10px;
+    }
+    .card-icons img {
+        height: 30px;
+        width: auto;
+    }
+</style>
+
+<section class="payment-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="payment-card">
+                    <div class="payment-header">
+                        <h2>Paiement</h2>
+                        <p class="mb-0">Complétez votre transaction en toute sécurité</p>
+                    </div>
+                    
+                    <div class="payment-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="mb-4" style="color: #8B5E3C; font-weight: 600;">Détails du paiement</h4>
+                                
+                                <div class="accepted-cards">
+                                    <h5>Cartes acceptées</h5>
+                                    <div class="card-icons">
+                                        <img src="https://raw.githubusercontent.com/danielkorte/payment-method-icons/master/visa.svg" alt="Visa" style="height: 30px;">
+                                        <img src="https://raw.githubusercontent.com/danielkorte/payment-method-icons/master/american-express.svg" alt="American Express" style="height: 30px;">
+                                        <img src="https://raw.githubusercontent.com/danielkorte/payment-method-icons/master/mastercard.svg" alt="MasterCard" style="height: 30px;">
+                                        <img src="https://raw.githubusercontent.com/danielkorte/payment-method-icons/master/discover.svg" alt="Discover" style="height: 30px;">
+                                    </div>
+                                </div>
+                                
+                                <form id="paymentForm">
+                                    <div class="mb-3">
+                                        <label for="cardName" class="form-label">Nom sur la carte</label>
+                                        <input type="text" class="form-control" id="cardName" placeholder="Nom complet tel qu'il apparaît sur la carte">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="cardNumber" class="form-label">Numéro de carte</label>
+                                        <input type="text" class="form-control" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX">
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="expiryDate" class="form-label">Date d'expiration</label>
+                                            <input type="text" class="form-control" id="expiryDate" placeholder="MM/AA">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="cvv" class="form-label">CVV</label>
+                                            <input type="text" class="form-control" id="cvv" placeholder="123">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label for="billingAddress" class="form-label">Adresse de facturation</label>
+                                        <textarea class="form-control" id="billingAddress" rows="3" placeholder="Adresse complète"></textarea>
+                                    </div>
+                                    
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-payment">
+                                            <i class="fas fa-lock me-2"></i> Payer maintenant
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Validation simple du formulaire de paiement
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Simuler le traitement du paiement
+        const submitButton = this.querySelector('button[type="submit"]');
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Traitement en cours...';
+        submitButton.disabled = true;
+        
+        // Simuler un délai de traitement
+        setTimeout(function() {
+            alert('Paiement traité avec succès!');
+            submitButton.innerHTML = '<i class="fas fa-check me-2"></i> Payé';
+            
+            // Redirection après paiement (à adapter selon vos besoins)
+            setTimeout(function() {
+                window.location.href = '/confirmation/';
+            }, 2000);
+        }, 2000);
+    });
+</script>
+{% endblock %}
