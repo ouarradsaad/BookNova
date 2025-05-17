@@ -88,7 +88,7 @@ WSGI_APPLICATION = "BookNova.wsgi.application"
 # Database configuration with dj_database_url
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'mysql://root:@localhost:3306/Book'),
+        default=os.environ.get('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/postgres'),
         conn_max_age=600,
         conn_health_checks=True,
     )
